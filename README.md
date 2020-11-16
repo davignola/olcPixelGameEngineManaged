@@ -1,5 +1,5 @@
 # olcPixelGameEngineManaged
-This is a managed c++/CLI wrapper around the OneLoneCoder's olcGameEngine components. This enable library access to managed C#,Vb.net,F# applications.
+This is a managed c++/CLI wrapper around OneLoneCoder's olcGameEngine components. This enable library access to managed C#,Vb.net,F# applications.
 This wrapper is made using dotnet core 3.1 C++CLI support.
 
 # Wrapper VS fully managed re-implementation
@@ -13,8 +13,14 @@ This is still a long process since everything has to be wrapped
 I am a complete C++ noob ! 
 The code is currently ugly, disorganised and I may have done some horrible things to the eyes of some !
 
+Sadly this is Windows only as C++/CLI is not supported on other platforms.
+
+I made this for fun as a learning experiement to see if it could be done and how performance is affected compared to the original.
+
 But it works enough to support a C# implementation of olcNES (part 1)
 See : https://github.com/davignola/olcNESharp
+
+Big thanks to OneLoneCoder for the original sources, this is a ton of fun to explore.
 
 Original project banner ahead :
 
