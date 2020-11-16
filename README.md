@@ -1,6 +1,22 @@
-<p align="center">
-  <a href="https://discord.gg/WhwHUMV"> <img src="https://img.shields.io/discord/380484403458998276?logo=discord"> </a>
-</p>
+# olcPixelGameEngineManaged
+This is a managed c++/CLI wrapper around the OneLoneCoder's olcGameEngine components. This enable library access to managed C#,Vb.net,F# applications.
+This wrapper is made using dotnet core 3.1 C++CLI support.
+
+# Wrapper VS fully managed re-implementation
+This projects wraps aroud native code to bridge between both runtime environments. This minimise overhead as most work is performed by native code as is.
+Since the main focus of the engine should be ease of use and performance. I think this is the best compromise.
+This also make staying up to date with the main code base much easier. As long as the method signatures are the same, there may be no changes to be made after merging.
+
+This is still a long process since everything has to be wrapped 
+
+# Disclaimer
+I am a complete C++ noob ! 
+The code is currently ugly, disorganised and I may have done some horrible things to the eyes of some !
+
+But it works enough to support a C# implementation of olcNES (part 1)
+See : https://github.com/davignola/olcNESharp
+
+Original project banner ahead :
 
 # olcPixelGameEngine
 The official distribution of olcPixelGameEngine, a tool used in javidx9's YouTube videos and projects.
