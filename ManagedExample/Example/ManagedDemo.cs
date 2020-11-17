@@ -28,7 +28,6 @@ namespace Example
 
         public override bool OnUserDestroy()
         {
-            // Called once at the start, so create things here
             return true;
         }
     }

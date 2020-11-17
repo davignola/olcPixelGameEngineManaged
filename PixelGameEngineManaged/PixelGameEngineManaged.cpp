@@ -4,6 +4,8 @@
 namespace olc {
 	namespace wrapper
 	{
+		// =============== OLC GAME ENGINE ============
+
 		// Hardware
 		bool PixelGameEngineManaged::IsFocused()
 		{
@@ -12,7 +14,7 @@ namespace olc {
 		// Get the state of a specific keyboard button
 		HWButtonManaged^ PixelGameEngineManaged::GetKey(KeyManaged k)
 		{
-			return gcnew HWButtonManaged(&m_Impl->GetKey((Key)k)); 
+			return gcnew HWButtonManaged(&m_Impl->GetKey((Key)k));
 		}
 		// Get the state of a specific mouse button
 		HWButtonManaged^ PixelGameEngineManaged::GetMouse(uint32_t b)
@@ -34,9 +36,18 @@ namespace olc {
 		{
 			return m_Impl->GetMouseWheel();
 		}
-
+		//// Get the mouse in window space
+		vi2dm^ PixelGameEngineManaged::GetWindowMouse()
+		{
+			return gcnew vi2dm(&m_Impl->GetWindowMouse());
+		}
+		//// Gets the mouse as a vector to keep Tarriest happy
+		vi2dm^ PixelGameEngineManaged::GetMousePos()
+		{
+			return gcnew vi2dm(&m_Impl->GetMousePos());
+		}
 		// Core methods
-		
+
 		rcodeManaged PixelGameEngineManaged::Construct(int32_t screen_w, int32_t screen_h, int32_t pixel_w, int32_t pixel_h, bool full_screen, bool vsync, bool cohesion)
 		{
 			return (rcodeManaged)m_Impl->Construct(screen_w, screen_h, pixel_w, pixel_h, full_screen, vsync, cohesion);
@@ -76,6 +87,11 @@ namespace olc {
 
 		// DRAW
 
+		void PixelGameEngineManaged::Clear(PixelManaged^ p)
+		{
+			m_Impl->Clear(*p->GetImplementation());
+		}
+
 		bool PixelGameEngineManaged::Draw(vi2dm pos, PixelManaged^ p) {
 			return m_Impl->Draw(*pos.GetImplementation(), *p->GetImplementation());
 		}
@@ -84,33 +100,52 @@ namespace olc {
 		}
 
 		void PixelGameEngineManaged::DrawString(int32_t x, int32_t y, System::String^ sText, PixelManaged^ col, uint32_t scale) {
-			return m_Impl->DrawString((int32_t)x, (int32_t)y, MarshalString(sText), *col->GetImplementation(), scale);
+			return m_Impl->DrawString((int32_t)x, (int32_t)y, Util::MarshalString(sText), *col->GetImplementation(), scale);
 		}
 		void PixelGameEngineManaged::DrawString(int32_t x, int32_t y, System::String^ sText, PixelManaged^ col) {
-			return m_Impl->DrawString((int32_t)x, (int32_t)y, MarshalString(sText), *col->GetImplementation());
+			return m_Impl->DrawString((int32_t)x, (int32_t)y, Util::MarshalString(sText), *col->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawString(int32_t x, int32_t y, System::String^ sText) {
-			return m_Impl->DrawString((int32_t)x, (int32_t)y, MarshalString(sText));
+			return m_Impl->DrawString((int32_t)x, (int32_t)y, Util::MarshalString(sText));
 		}
 
 		void PixelGameEngineManaged::DrawString(vi2dm pos, System::String^ sText, PixelManaged^ col, uint32_t scale) {
-			return m_Impl->DrawString(*pos.GetImplementation(), MarshalString(sText), *col->GetImplementation(), scale);
+			return m_Impl->DrawString(*pos.GetImplementation(), Util::MarshalString(sText), *col->GetImplementation(), scale);
 		}
 		void PixelGameEngineManaged::DrawString(vi2dm pos, System::String^ sText, PixelManaged^ col) {
-			return m_Impl->DrawString(*pos.GetImplementation(), MarshalString(sText), *col->GetImplementation());
+			return m_Impl->DrawString(*pos.GetImplementation(), Util::MarshalString(sText), *col->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawString(vi2dm pos, System::String^ sText) {
-			return m_Impl->DrawString(*pos.GetImplementation(), MarshalString(sText));
+			return m_Impl->DrawString(*pos.GetImplementation(), Util::MarshalString(sText));
 		}
 		vi2dm^ PixelGameEngineManaged::GetTextSize(System::String^ s) {
-			return gcnew vi2dm(&m_Impl->GetTextSize(MarshalString(s)));
+			return gcnew vi2dm(&m_Impl->GetTextSize(Util::MarshalString(s)));
 		}
 
-
-		void PixelGameEngineManaged::Clear(PixelManaged^ p)
+		void PixelGameEngineManaged::DrawSprite(int32_t x, int32_t y, SpriteManaged^ sprite, uint32_t scale, uint8_t flip)
 		{
-			m_Impl->Clear(*p->GetImplementation());
+			m_Impl->DrawSprite(x, y, sprite->GetImplementation(), scale, flip);
 		}
+		void PixelGameEngineManaged::DrawSprite(int32_t x, int32_t y, SpriteManaged^ sprite, uint32_t scale)
+		{
+			m_Impl->DrawSprite(x, y, sprite->GetImplementation(), scale);
+		}
+		void PixelGameEngineManaged::DrawSprite(int32_t x, int32_t y, SpriteManaged^ sprite)
+		{
+			m_Impl->DrawSprite(x, y, sprite->GetImplementation());
+		}
+		void PixelGameEngineManaged::DrawSprite(vi2dm pos, SpriteManaged^ sprite, uint32_t scale, uint8_t flip)
+		{
+			m_Impl->DrawSprite(*pos.GetImplementation(), sprite->GetImplementation(), scale, flip);
+		}
+		void PixelGameEngineManaged::DrawSprite(vi2dm pos, SpriteManaged^ sprite, uint32_t scale)
+		{
+			m_Impl->DrawSprite(*pos.GetImplementation(), sprite->GetImplementation(), scale);
+		}
+		void PixelGameEngineManaged::DrawSprite(vi2dm pos, SpriteManaged^ sprite) {
+			m_Impl->DrawSprite(*pos.GetImplementation(), sprite->GetImplementation());
+		}
+
 
 	}
 }

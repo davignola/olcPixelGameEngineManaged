@@ -117,6 +117,7 @@
   <ItemGroup>
     <ClCompile Include="PixelGameEngineManaged.cpp" />
     <ClCompile Include="PixelGameEngineWrapper.cpp" />
+    <ClCompile Include="SpriteManaged.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PixelGameEngine.vcxproj">

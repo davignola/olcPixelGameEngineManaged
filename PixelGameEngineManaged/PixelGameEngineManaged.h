@@ -27,6 +27,16 @@ namespace olc {
 			CAPS_LOCK, ENUM_END
 		};
 
+		// UTILS
+		static ref class Util
+		{
+		public:
+			static std::string MarshalString(System::String^ s) {
+				std::string standardString = msclr::interop::marshal_as<std::string>(s);
+				return standardString;
+			}
+		};
+
 		/// <summary>
 		/// v2d_generic IMPL
 		/// </summary>
@@ -35,13 +45,30 @@ namespace olc {
 		{
 		private:
 			v2d_generic<T>* m_Impl;
+			const v2d_generic<T>* m_ImplConst;
 		public:
 			v2d_genericManaged() : { m_Impl = new v2d_generic(0, 0); }
-			v2d_genericManaged(v2d_generic<T>* _impl) { m_Impl = _impl; }
+			v2d_genericManaged(v2d_generic<T>* _impl)
+			{
+				m_Impl = _impl;
+				x = _impl->x;
+				y = _impl->y;
+			}
+			v2d_genericManaged(const v2d_generic<T>* _impl)
+			{
+				m_ImplConst = _impl;
+				IsConst = true;
+				x = _impl->x;
+				y = _impl->y;
+			}
 			v2d_genericManaged(T _x, T _y) { m_Impl = new v2d_generic(x, y); }
-			//v2d_genericManaged(const v2d_genericManaged<T>& v) { m_Impl = new v2d_generic(v.x, v.y); }
+
+			bool IsConst = false;
+			T x = 0;
+			T y = 0;
 
 			v2d_generic<T>* GetImplementation() { return m_Impl; }
+			const v2d_generic<T>* GetImplementationConst() { return m_ImplConst; }
 
 		};
 		typedef v2d_genericManaged<int32_t> vi2dm;
@@ -63,6 +90,7 @@ namespace olc {
 			PixelManaged(uint8_t red, uint8_t green, uint8_t blue) { m_Impl = new Pixel(red, green, blue); }
 			PixelManaged(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) { m_Impl = new Pixel(red, green, blue, alpha); }
 			PixelManaged(uint32_t p) { m_Impl = new Pixel(p); }
+			PixelManaged(Pixel* _impl) { m_Impl = _impl; }
 			~PixelManaged() { this->!PixelManaged(); }
 			!PixelManaged() {
 				if (m_Impl) {
@@ -75,25 +103,104 @@ namespace olc {
 
 		};
 
+
+		/// <summary>
+		/// RESOURCEPACK IMPL
+		/// </summary>
+		public ref struct ResourcePackManaged {
+		private:
+			ResourcePack* m_Impl;
+
+		public:
+
+		public:
+			ResourcePackManaged() { m_Impl = new ResourcePack(); }
+			~ResourcePackManaged() { this->!ResourcePackManaged(); }
+			!ResourcePackManaged() {
+				if (m_Impl) {
+					delete m_Impl;
+					m_Impl = 0;
+				}
+			}
+			bool AddFile(System::String^ sFile);
+			bool LoadPack(System::String^ sFile, System::String^ sKey);
+			bool SavePack(System::String^ sFile, System::String^ sKey);
+			System::Collections::Generic::List<char>^ GetFileBuffer(System::String^ sFile);
+			bool Loaded();
+
+		public:
+			ResourcePack* GetImplementation() { return m_Impl; }
+
+		};
+
+		/// <summary>
+		/// SPRITE IMPL
+		/// </summary>
+		public ref struct SpriteManaged {
+		private:
+			Sprite* m_Impl;
+
+		public:
+			SpriteManaged() { m_Impl = new Sprite(); }
+			SpriteManaged(System::String^ sImageFile, ResourcePackManaged^ pack) { m_Impl = new Sprite(Util::MarshalString(sImageFile), pack->GetImplementation()); }
+			SpriteManaged(System::String^ sImageFile) { m_Impl = new Sprite(Util::MarshalString(sImageFile)); }
+			SpriteManaged(int32_t w, int32_t h) { m_Impl = new Sprite(w, h); }
+			SpriteManaged(Sprite* _impl) { m_Impl = _impl; }
+			~SpriteManaged() { this->!SpriteManaged(); }
+			!SpriteManaged() {
+				if (m_Impl) {
+					delete m_Impl;
+					m_Impl = 0;
+				}
+			}
+
+		public:
+			rcodeManaged LoadFromFile(System::String^ sImageFile, ResourcePackManaged^ pack);
+			rcodeManaged LoadFromFile(System::String^ sImageFile);
+			rcodeManaged LoadFromPGESprFile(System::String^ sImageFile, ResourcePackManaged^ pack);
+			rcodeManaged LoadFromPGESprFile(System::String^ sImageFile);
+			rcodeManaged SaveToPGESprFile(System::String^ sImageFile);
+
+		public:
+			int32_t width();
+			int32_t height();
+			enum class ModeManaged : byte { NORMAL, PERIODIC };
+			enum class FlipManaged : byte { NONE = 0, HORIZ = 1, VERT = 2 };
+
+		public:
+			void SetSampleMode();
+			void SetSampleMode(ModeManaged mode);
+			PixelManaged^ GetPixel(int32_t x, int32_t y);
+			bool  SetPixel(int32_t x, int32_t y, PixelManaged^ p);
+			PixelManaged^ GetPixel(vi2dm a);
+			bool  SetPixel(vi2dm a, PixelManaged^ p);
+			PixelManaged^ Sample(float x, float y);
+			PixelManaged^ SampleBL(float u, float v);
+			PixelManaged^ GetData();
+			SpriteManaged^ Duplicate();
+			SpriteManaged^ Duplicate(vi2dm vPos, vi2dm vSize);
+
+			PixelManaged^ pColData();
+			ModeManaged^ modeSample();
+
+			//static std::unique_ptr<olc::ImageLoader> loader;
+
+			Sprite* GetImplementation() { return m_Impl; }
+
+		};
+
 		public ref struct HWButtonManaged
 		{
 		private:
 			HWButton* m_Impl;
 
 		public:
-			HWButtonManaged(HWButton* _impl)
-			{
-				m_Impl = _impl;
-				bPressed = m_Impl->bPressed;
-				bReleased = m_Impl->bReleased;
-				bHeld = m_Impl->bHeld;
-			}
 			HWButtonManaged() { m_Impl = new HWButton(); }
-			
-			bool bPressed = false;	// Set once during the frame the event occurs
-			bool bReleased = false;	// Set once during the frame the event occurs
-			bool bHeld = false;		// Set true for all frames between pressed and released events
+			HWButtonManaged(HWButton* _impl) { m_Impl = _impl; }
 
+			bool bPressed() { return m_Impl->bPressed; }	// Set once during the frame the event occurs
+			bool bReleased() { return m_Impl->bReleased; }	// Set once during the frame the event occurs
+			bool bHeld() { return m_Impl->bHeld; }			// Set true for all frames between pressed and released events
 
 			HWButton* GetImplementation() { return m_Impl; }
 		};
@@ -139,11 +246,11 @@ namespace olc {
 			// Get Mouse Wheel Delta
 			int32_t GetMouseWheel();
 			//// Get the mouse in window space
-			//const olc::vi2d& GetWindowMouse();
+			vi2dm^ GetWindowMouse();
 			//// Gets the mouse as a vector to keep Tarriest happy
-			//const olc::vi2d& GetMousePos();
-			
-		public:
+			vi2dm^ GetMousePos();
+
+		public: // Core stuff
 			rcodeManaged Construct(int32_t screen_w, int32_t screen_h, int32_t pixel_w, int32_t pixel_h, bool full_screen, bool vsync, bool cohesion);
 			rcodeManaged Construct(int32_t screen_w, int32_t screen_h, int32_t pixel_w, int32_t pixel_h, bool full_screen, bool vsync);
 			rcodeManaged Construct(int32_t screen_w, int32_t screen_h, int32_t pixel_w, int32_t pixel_h, bool full_screen);
@@ -156,7 +263,9 @@ namespace olc {
 
 			int32_t ScreenHeight();
 
-			bool Draw(vi2dm pos, PixelManaged^ p);
+		public: // Drawing
+
+			bool Draw(const vi2dm pos, PixelManaged^ p);
 			bool Draw(int x, int y, PixelManaged^ p);
 
 			// Draws a single line of text - traditional monospaced
@@ -168,23 +277,15 @@ namespace olc {
 			void DrawString(vi2dm pos, System::String^ sText);
 			vi2dm^ GetTextSize(System::String^ s);
 
+			// Draws an entire sprite at well location (x,y)
+			void DrawSprite(int32_t x, int32_t y, SpriteManaged^ sprite, uint32_t scale, uint8_t flip);
+			void DrawSprite(int32_t x, int32_t y, SpriteManaged^ sprite, uint32_t scale);
+			void DrawSprite(int32_t x, int32_t y, SpriteManaged^ sprite);
+			void DrawSprite(vi2dm pos, SpriteManaged^ sprite, uint32_t scale, uint8_t flip);
+			void DrawSprite(vi2dm pos, SpriteManaged^ sprite, uint32_t scale);
+			void DrawSprite(vi2dm pos, SpriteManaged^ sprite);
+
 			void Clear(PixelManaged^ p);
-
-			// UTILS
-
-			std::string& MarshalString2(System::String^ s) {
-				using namespace System::Runtime::InteropServices;
-				const char* chars =
-					(const char*)(Marshal::StringToHGlobalUni(s)).ToPointer();
-				std::string& os = std::string(chars);
-				Marshal::FreeHGlobal(System::IntPtr((void*)chars));
-				return os;
-			}
-
-			std::string MarshalString(System::String^ s) {
-				std::string standardString = msclr::interop::marshal_as<std::string>(s);
-				return standardString;
-			}
 
 		internal:
 			bool CallOnUserCreate()
