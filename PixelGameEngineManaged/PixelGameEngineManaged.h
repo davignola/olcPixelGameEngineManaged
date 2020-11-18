@@ -285,6 +285,18 @@ namespace olc {
 			void DrawSprite(vi2dm pos, SpriteManaged^ sprite, uint32_t scale);
 			void DrawSprite(vi2dm pos, SpriteManaged^ sprite);
 
+			// Draws a rectangle at (x,y) to (x+w,y+h)
+			void DrawRect(int32_t x, int32_t y, int32_t w, int32_t h, PixelManaged^ p);
+			void DrawRect(int32_t x, int32_t y, int32_t w, int32_t h);
+			void DrawRect(vi2dm pos, vi2dm size, PixelManaged^ p );
+			void DrawRect(vi2dm pos, vi2dm size);
+			
+			// Fills a rectangle at (x,y) to (x+w,y+h)
+			void FillRect(int32_t x, int32_t y, int32_t w, int32_t h, PixelManaged^ p );
+			void FillRect(int32_t x, int32_t y, int32_t w, int32_t h);
+			void FillRect(vi2dm pos, vi2dm size, PixelManaged^ p );
+			void FillRect(vi2dm pos, vi2dm size);
+
 			void Clear(PixelManaged^ p);
 
 		internal:
