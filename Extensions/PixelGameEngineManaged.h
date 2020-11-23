@@ -1,5 +1,5 @@
 #pragma once
-#include "PixelGameEngineWrapper.h"
+#include "PixelGameEngineWithOwner.h"
 
 #include <msclr\marshal_cppstd.h>
 
@@ -10,7 +10,7 @@ namespace olc {
 		public enum class rcodeManaged : char { FAIL = 0, OK = 1, NO_FILE = -1 };
 
 		// Thanks to scripticuk and others for updating the key maps
-// MOTE: The GLUT platform will need updating, open to contributions ;)
+		// MOTE: The GLUT platform will need updating, open to contributions ;)
 		public enum class KeyManaged : char
 		{
 			NONE,
@@ -172,13 +172,13 @@ namespace olc {
 			void SetSampleMode(ModeManaged mode);
 			PixelManaged^ GetPixel(int32_t x, int32_t y);
 			bool  SetPixel(int32_t x, int32_t y, PixelManaged^ p);
-			PixelManaged^ GetPixel(vi2dm a);
-			bool  SetPixel(vi2dm a, PixelManaged^ p);
+			PixelManaged^ GetPixel(vi2dm^ a);
+			bool  SetPixel(vi2dm^ a, PixelManaged^ p);
 			PixelManaged^ Sample(float x, float y);
 			PixelManaged^ SampleBL(float u, float v);
 			PixelManaged^ GetData();
 			SpriteManaged^ Duplicate();
-			SpriteManaged^ Duplicate(vi2dm vPos, vi2dm vSize);
+			SpriteManaged^ Duplicate(vi2dm^ vPos, vi2dm^ vSize);
 
 			PixelManaged^ pColData();
 			ModeManaged^ modeSample();
@@ -265,37 +265,37 @@ namespace olc {
 
 		public: // Drawing
 
-			bool Draw(const vi2dm pos, PixelManaged^ p);
+			bool Draw(vi2dm^ pos, PixelManaged^ p);
 			bool Draw(int x, int y, PixelManaged^ p);
 
 			// Draws a single line of text - traditional monospaced
 			void DrawString(int32_t x, int32_t y, System::String^ sText, PixelManaged^, uint32_t scale);
 			void DrawString(int32_t x, int32_t y, System::String^ sText, PixelManaged^ col);
 			void DrawString(int32_t x, int32_t y, System::String^ sText);
-			void DrawString(vi2dm pos, System::String^ sText, PixelManaged^ col, uint32_t scale);
-			void DrawString(vi2dm pos, System::String^ sText, PixelManaged^ col);
-			void DrawString(vi2dm pos, System::String^ sText);
+			void DrawString(vi2dm^ pos, System::String^ sText, PixelManaged^ col, uint32_t scale);
+			void DrawString(vi2dm^ pos, System::String^ sText, PixelManaged^ col);
+			void DrawString(vi2dm^ pos, System::String^ sText);
 			vi2dm^ GetTextSize(System::String^ s);
 
 			// Draws an entire sprite at well location (x,y)
 			void DrawSprite(int32_t x, int32_t y, SpriteManaged^ sprite, uint32_t scale, uint8_t flip);
 			void DrawSprite(int32_t x, int32_t y, SpriteManaged^ sprite, uint32_t scale);
 			void DrawSprite(int32_t x, int32_t y, SpriteManaged^ sprite);
-			void DrawSprite(vi2dm pos, SpriteManaged^ sprite, uint32_t scale, uint8_t flip);
-			void DrawSprite(vi2dm pos, SpriteManaged^ sprite, uint32_t scale);
-			void DrawSprite(vi2dm pos, SpriteManaged^ sprite);
+			void DrawSprite(vi2dm^ pos, SpriteManaged^ sprite, uint32_t scale, uint8_t flip);
+			void DrawSprite(vi2dm^ pos, SpriteManaged^ sprite, uint32_t scale);
+			void DrawSprite(vi2dm^ pos, SpriteManaged^ sprite);
 
 			// Draws a rectangle at (x,y) to (x+w,y+h)
 			void DrawRect(int32_t x, int32_t y, int32_t w, int32_t h, PixelManaged^ p);
 			void DrawRect(int32_t x, int32_t y, int32_t w, int32_t h);
-			void DrawRect(vi2dm pos, vi2dm size, PixelManaged^ p );
-			void DrawRect(vi2dm pos, vi2dm size);
+			void DrawRect(vi2dm^ pos, vi2dm^ size, PixelManaged^ p );
+			void DrawRect(vi2dm^ pos, vi2dm^ size);
 			
 			// Fills a rectangle at (x,y) to (x+w,y+h)
 			void FillRect(int32_t x, int32_t y, int32_t w, int32_t h, PixelManaged^ p );
 			void FillRect(int32_t x, int32_t y, int32_t w, int32_t h);
-			void FillRect(vi2dm pos, vi2dm size, PixelManaged^ p );
-			void FillRect(vi2dm pos, vi2dm size);
+			void FillRect(vi2dm^ pos, vi2dm^ size, PixelManaged^ p );
+			void FillRect(vi2dm^ pos, vi2dm^ size);
 
 			void Clear(PixelManaged^ p);
 

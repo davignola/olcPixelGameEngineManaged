@@ -83,13 +83,13 @@ namespace olc {
 		{
 			return m_Impl->SetPixel(x, y, *p->GetImplementation());
 		}
-		PixelManaged^ SpriteManaged::GetPixel(vi2dm a)
+		PixelManaged^ SpriteManaged::GetPixel(vi2dm^ a)
 		{
-			return  gcnew PixelManaged(&m_Impl->GetPixel(*a.GetImplementation()));
+			return  gcnew PixelManaged(&m_Impl->GetPixel(*a->GetImplementation()));
 		}
-		bool  SpriteManaged::SetPixel(vi2dm a, PixelManaged^ p)
+		bool  SpriteManaged::SetPixel(vi2dm^ a, PixelManaged^ p)
 		{
-			return m_Impl->SetPixel(*a.GetImplementation(), *p->GetImplementation());
+			return m_Impl->SetPixel(*a->GetImplementation(), *p->GetImplementation());
 		}
 		PixelManaged^ SpriteManaged::Sample(float x, float y)
 		{
@@ -107,9 +107,9 @@ namespace olc {
 		{
 			return  gcnew SpriteManaged(m_Impl->Duplicate());
 		}
-		SpriteManaged^ SpriteManaged::Duplicate(vi2dm vPos, vi2dm vSize)
+		SpriteManaged^ SpriteManaged::Duplicate(vi2dm^ vPos, vi2dm^ vSize)
 		{
-			return  gcnew SpriteManaged(m_Impl->Duplicate(*vPos.GetImplementation(), *vSize.GetImplementation()));
+			return  gcnew SpriteManaged(m_Impl->Duplicate(*vPos->GetImplementation(), *vSize->GetImplementation()));
 		}
 
 		PixelManaged^ SpriteManaged::pColData()

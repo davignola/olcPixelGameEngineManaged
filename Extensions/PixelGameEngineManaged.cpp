@@ -92,8 +92,8 @@ namespace olc {
 			m_Impl->Clear(*p->GetImplementation());
 		}
 
-		bool PixelGameEngineManaged::Draw(vi2dm pos, PixelManaged^ p) {
-			return m_Impl->Draw(*pos.GetImplementation(), *p->GetImplementation());
+		bool PixelGameEngineManaged::Draw(vi2dm^ pos, PixelManaged^ p) {
+			return m_Impl->Draw(*pos->GetImplementation(), *p->GetImplementation());
 		}
 		bool PixelGameEngineManaged::Draw(int x, int y, PixelManaged^ p) {
 			return m_Impl->Draw((int32_t)x, (int32_t)y, *p->GetImplementation());
@@ -109,14 +109,14 @@ namespace olc {
 			return m_Impl->DrawString((int32_t)x, (int32_t)y, Util::MarshalString(sText));
 		}
 
-		void PixelGameEngineManaged::DrawString(vi2dm pos, System::String^ sText, PixelManaged^ col, uint32_t scale) {
-			return m_Impl->DrawString(*pos.GetImplementation(), Util::MarshalString(sText), *col->GetImplementation(), scale);
+		void PixelGameEngineManaged::DrawString(vi2dm^ pos, System::String^ sText, PixelManaged^ col, uint32_t scale) {
+			return m_Impl->DrawString(*pos->GetImplementation(), Util::MarshalString(sText), *col->GetImplementation(), scale);
 		}
-		void PixelGameEngineManaged::DrawString(vi2dm pos, System::String^ sText, PixelManaged^ col) {
-			return m_Impl->DrawString(*pos.GetImplementation(), Util::MarshalString(sText), *col->GetImplementation());
+		void PixelGameEngineManaged::DrawString(vi2dm^ pos, System::String^ sText, PixelManaged^ col) {
+			return m_Impl->DrawString(*pos->GetImplementation(), Util::MarshalString(sText), *col->GetImplementation());
 		}
-		void PixelGameEngineManaged::DrawString(vi2dm pos, System::String^ sText) {
-			return m_Impl->DrawString(*pos.GetImplementation(), Util::MarshalString(sText));
+		void PixelGameEngineManaged::DrawString(vi2dm^ pos, System::String^ sText) {
+			return m_Impl->DrawString(*pos->GetImplementation(), Util::MarshalString(sText));
 		}
 		vi2dm^ PixelGameEngineManaged::GetTextSize(System::String^ s) {
 			return gcnew vi2dm(&m_Impl->GetTextSize(Util::MarshalString(s)));
@@ -134,16 +134,16 @@ namespace olc {
 		{
 			m_Impl->DrawSprite(x, y, sprite->GetImplementation());
 		}
-		void PixelGameEngineManaged::DrawSprite(vi2dm pos, SpriteManaged^ sprite, uint32_t scale, uint8_t flip)
+		void PixelGameEngineManaged::DrawSprite(vi2dm^ pos, SpriteManaged^ sprite, uint32_t scale, uint8_t flip)
 		{
-			m_Impl->DrawSprite(*pos.GetImplementation(), sprite->GetImplementation(), scale, flip);
+			m_Impl->DrawSprite(*pos->GetImplementation(), sprite->GetImplementation(), scale, flip);
 		}
-		void PixelGameEngineManaged::DrawSprite(vi2dm pos, SpriteManaged^ sprite, uint32_t scale)
+		void PixelGameEngineManaged::DrawSprite(vi2dm^ pos, SpriteManaged^ sprite, uint32_t scale)
 		{
-			m_Impl->DrawSprite(*pos.GetImplementation(), sprite->GetImplementation(), scale);
+			m_Impl->DrawSprite(*pos->GetImplementation(), sprite->GetImplementation(), scale);
 		}
-		void PixelGameEngineManaged::DrawSprite(vi2dm pos, SpriteManaged^ sprite) {
-			m_Impl->DrawSprite(*pos.GetImplementation(), sprite->GetImplementation());
+		void PixelGameEngineManaged::DrawSprite(vi2dm^ pos, SpriteManaged^ sprite) {
+			m_Impl->DrawSprite(*pos->GetImplementation(), sprite->GetImplementation());
 		}
 
 		// Draws a rectangle at (x,y) to (x+w,y+h)
@@ -154,13 +154,13 @@ namespace olc {
 		void PixelGameEngineManaged::DrawRect(int32_t x, int32_t y, int32_t w, int32_t h) {
 			m_Impl->DrawRect(x, y, w, h);
 		}
-		void PixelGameEngineManaged::DrawRect(vi2dm pos, vi2dm size, PixelManaged^ p)
+		void PixelGameEngineManaged::DrawRect(vi2dm^ pos, vi2dm^ size, PixelManaged^ p)
 		{
-			m_Impl->DrawRect(*pos.GetImplementation(), *size.GetImplementation(), *p->GetImplementation());
+			m_Impl->DrawRect(*pos->GetImplementation(), *size->GetImplementation(), *p->GetImplementation());
 		}
-		void PixelGameEngineManaged::DrawRect(vi2dm pos, vi2dm size)
+		void PixelGameEngineManaged::DrawRect(vi2dm^ pos, vi2dm^ size)
 		{
-			m_Impl->DrawRect(*pos.GetImplementation(), *size.GetImplementation());
+			m_Impl->DrawRect(*pos->GetImplementation(), *size->GetImplementation());
 		}
 
 		// Fills a rectangle at (x,y) to (x+w,y+h)
@@ -170,11 +170,11 @@ namespace olc {
 		void PixelGameEngineManaged::FillRect(int32_t x, int32_t y, int32_t w, int32_t h) {
 			m_Impl->FillRect(x, y, w, h);
 		}
-		void PixelGameEngineManaged::FillRect(vi2dm pos, vi2dm size, PixelManaged^ p) {
-			m_Impl->FillRect(*pos.GetImplementation(), *size.GetImplementation(), *p->GetImplementation());
+		void PixelGameEngineManaged::FillRect(vi2dm^ pos, vi2dm^ size, PixelManaged^ p) {
+			m_Impl->FillRect(*pos->GetImplementation(), *size->GetImplementation(), *p->GetImplementation());
 		}
-		void PixelGameEngineManaged::FillRect(vi2dm pos, vi2dm size) {
-			m_Impl->FillRect(*pos.GetImplementation(), *size.GetImplementation());
+		void PixelGameEngineManaged::FillRect(vi2dm^ pos, vi2dm^ size) {
+			m_Impl->FillRect(*pos->GetImplementation(), *size->GetImplementation());
 		}
 
 
