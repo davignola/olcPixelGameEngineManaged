@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\olcPixelgameEngineManaged.vcxproj" />
+    <ProjectReference Include="..\..\Extensions\Managed\olcPixelgameEngineManaged.vcxproj" />
   </ItemGroup>
 
 </Project>

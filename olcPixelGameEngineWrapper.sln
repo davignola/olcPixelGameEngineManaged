@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30406.217
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example", "ManagedExample\Example\Example.csproj", "{75B599A5-EB71-4471-AA4C-B865F72EA3D8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "olcPixelgameEngineManaged", "olcPixelgameEngineManaged.vcxproj", "{20CF67B0-6B9C-41BC-8CE0-AACFC32C0550}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "olcPixelgameEngine", "olcPixelgameEngine.vcxproj", "{48B04E2E-34A8-465E-8597-5624A90D1E6D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "olcPixelgameEngineManaged", "Extensions\Managed\olcPixelgameEngineManaged.vcxproj", "{20CF67B0-6B9C-41BC-8CE0-AACFC32C0550}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,14 @@ Global
 		{75B599A5-EB71-4471-AA4C-B865F72EA3D8}.Release|x64.ActiveCfg = Release|x64
 		{75B599A5-EB71-4471-AA4C-B865F72EA3D8}.Release|x64.Build.0 = Release|x64
 		{75B599A5-EB71-4471-AA4C-B865F72EA3D8}.Release|x86.ActiveCfg = Release|x64
+		{48B04E2E-34A8-465E-8597-5624A90D1E6D}.Debug|x64.ActiveCfg = Debug|x64
+		{48B04E2E-34A8-465E-8597-5624A90D1E6D}.Debug|x64.Build.0 = Debug|x64
+		{48B04E2E-34A8-465E-8597-5624A90D1E6D}.Debug|x86.ActiveCfg = Debug|Win32
+		{48B04E2E-34A8-465E-8597-5624A90D1E6D}.Debug|x86.Build.0 = Debug|Win32
+		{48B04E2E-34A8-465E-8597-5624A90D1E6D}.Release|x64.ActiveCfg = Release|x64
+		{48B04E2E-34A8-465E-8597-5624A90D1E6D}.Release|x64.Build.0 = Release|x64
+		{48B04E2E-34A8-465E-8597-5624A90D1E6D}.Release|x86.ActiveCfg = Release|Win32
+		{48B04E2E-34A8-465E-8597-5624A90D1E6D}.Release|x86.Build.0 = Release|Win32
 		{20CF67B0-6B9C-41BC-8CE0-AACFC32C0550}.Debug|x64.ActiveCfg = Debug|x64
 		{20CF67B0-6B9C-41BC-8CE0-AACFC32C0550}.Debug|x64.Build.0 = Debug|x64
 		{20CF67B0-6B9C-41BC-8CE0-AACFC32C0550}.Debug|x86.ActiveCfg = Debug|Win32

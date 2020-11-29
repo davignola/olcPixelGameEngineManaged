@@ -11,7 +11,6 @@ namespace Example
             if (demo.Construct(100, 100, 4, 4) == rcodeManaged.OK)
                 demo.Start();
 
-
         }
     }
 }

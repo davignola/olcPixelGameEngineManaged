@@ -15,6 +15,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="olcPixelGameEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Extensions\olcPGEX_Graphics2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -30,33 +33,15 @@
     <ClInclude Include="Extensions\olcPGEX_Sound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Extensions\PixelGameEngineManaged.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="olcPixelGameEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Extensions\PixelGameEngineWithOwner.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Extensions\PixelGameEngineManaged.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Extensions\SpriteManaged.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="olcExampleProgram.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Extensions\PixelGameEngineWithOwner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include=".gitignore" />
     <None Include="LICENCE.md" />
+    <None Include=".gitignore" />
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Extensions\Managed\x64\Definitions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 #define OLC_PGE_APPLICATION
+#pragma once
 #include "olcPixelGameEngine.h"
 
 class Example : public olc::PixelGameEngine
