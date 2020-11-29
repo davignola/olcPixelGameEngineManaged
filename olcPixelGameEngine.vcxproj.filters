@@ -40,7 +40,7 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Extensions\Managed\x64\Definitions.cpp">
+    <ClCompile Include="Extensions\Managed\Includes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

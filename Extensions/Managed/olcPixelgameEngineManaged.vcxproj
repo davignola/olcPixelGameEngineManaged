@@ -23,12 +23,12 @@
     <ClInclude Include="PixelGameEngineManaged.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="olcExampleProgramManaged.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\olcPixelgameEngine.vcxproj">
       <Project>{48b04e2e-34a8-465e-8597-5624a90d1e6d}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="olcExampleProgramManaged.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -94,6 +94,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies />
+      <NoEntryPoint>true</NoEntryPoint>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

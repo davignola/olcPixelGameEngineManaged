@@ -1,5 +1,5 @@
-#define OLC_PGE_APPLICATION
 #pragma once
+#define OLC_PGE_APPLICATION
 #include "Extensions/Managed/PixelGameEngineManaged.h"
 #include "Extensions/Managed/olcPGEXSoundManaged.h"
 
@@ -34,11 +34,3 @@ public:
 };
 
 
-int main()
-{
-	ExampleManaged^ demo = gcnew  ExampleManaged();
-	if (demo->Construct(256, 240, 4, 4) == olc::wrapper::rcodeManaged::OK)
-		demo->Start();
-	
-	return 0;
-}
