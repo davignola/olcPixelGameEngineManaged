@@ -123,6 +123,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies />
+      <NoEntryPoint>true</NoEntryPoint>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
