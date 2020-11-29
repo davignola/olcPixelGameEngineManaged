@@ -12,7 +12,7 @@ using namespace System::Collections::Generic;
  ********************************************************/
 
 namespace olc {
-	namespace wrapper
+	namespace managed
 	{
 
 		// Predeclaration
@@ -391,7 +391,7 @@ namespace olc {
 
 
 namespace olc {
-	namespace wrapper
+	namespace managed
 	{
 
 		// =========== olcPixelGameEngineWithOwner ===================

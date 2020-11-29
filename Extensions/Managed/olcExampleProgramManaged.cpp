@@ -1,9 +1,9 @@
 #pragma once
 #define OLC_PGE_APPLICATION
-#include "Extensions/Managed/PixelGameEngineManaged.h"
-#include "Extensions/Managed/olcPGEXSoundManaged.h"
+#include "PixelGameEngineManaged.h"
+#include "olcPGEXSoundManaged.h"
 
-public ref class ExampleManaged : public olc::wrapper::PixelGameEngineManaged
+public ref class ExampleManaged : public olc::managed::PixelGameEngineManaged
 {
 public:
 	ExampleManaged()
@@ -23,7 +23,7 @@ public:
 		// called once per frame
 		for (int x = 0; x < ScreenWidth(); x++)
 			for (int y = 0; y < ScreenHeight(); y++)
-				Draw(x, y, gcnew  olc::wrapper::PixelManaged(rand() % 255, rand() % 255, rand()% 255));	
+				Draw(x, y, gcnew  olc::managed::PixelManaged(rand() % 255, rand() % 255, rand() % 255));
 		return true;
 	}
 
@@ -34,3 +34,11 @@ public:
 };
 
 
+int main()
+{
+	ExampleManaged^ demo = gcnew  ExampleManaged();
+	if (demo->Construct(256, 240, 4, 4) == olc::managed::rcodeManaged::OK)
+		demo->Start();
+
+	return 0;
+}

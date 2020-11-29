@@ -24,6 +24,7 @@
     <ClInclude Include="Extensions\olcPGEX_PopUpMenu.h" />
     <ClInclude Include="Extensions\olcPGEX_RayCastWorld.h" />
     <ClInclude Include="Extensions\olcPGEX_Sound.h" />
+    <ClInclude Include="Extensions\Managed\Wrapper\olcPGEX_SoundWrapper.h" />
     <ClInclude Include="olcPixelGameEngine.h" />
   </ItemGroup>
   <ItemGroup>
@@ -33,6 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Extensions\Managed\Includes.cpp" />
+    <ClCompile Include="Extensions\Managed\Wrapper\olcPGEX_SoundWrapper.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

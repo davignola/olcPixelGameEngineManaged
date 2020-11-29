@@ -33,6 +33,9 @@
     <ClInclude Include="Extensions\olcPGEX_Sound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Extensions\Managed\Wrapper\olcPGEX_SoundWrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="LICENCE.md" />
@@ -41,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Extensions\Managed\Includes.cpp">
+    <ClCompile Include="Extensions\Managed\Wrapper\olcPGEX_SoundWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

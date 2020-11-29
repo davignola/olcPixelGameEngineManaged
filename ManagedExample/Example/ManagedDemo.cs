@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using olc.wrapper;
+using olc.managed;
 
 
 namespace Example
@@ -11,6 +11,7 @@ namespace Example
         public override bool OnUserCreate()
         {
             // Called once at the start, so create things here
+            olcPGEXSoundManaged.InitialiseAudio();
             return true;
         }
 
