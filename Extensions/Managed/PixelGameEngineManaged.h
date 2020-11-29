@@ -96,6 +96,18 @@ namespace olc {
 				y = _impl->y;
 			}
 			v2d_genericManaged(T _x, T _y) { m_Impl = new v2d_generic(x, y); }
+			~v2d_genericManaged() { this->!v2d_genericManaged(); }
+
+			!v2d_genericManaged() {
+				if (m_Impl) {
+					delete m_Impl;
+					m_Impl = 0;
+				}
+				if (m_ImplConst) {
+					delete m_ImplConst;
+					m_ImplConst = 0;
+				}
+			}
 
 			bool IsConst = false;
 			T x = 0;
@@ -230,11 +242,17 @@ namespace olc {
 
 		public:
 			HWButtonManaged() { m_Impl = new HWButton(); }
-			HWButtonManaged(HWButton* _impl) { m_Impl = _impl; }
+			HWButtonManaged(HWButton* _impl)
+			{
+				m_Impl = _impl;
+				bPressed = _impl->bPressed;
+				bReleased = _impl->bReleased;
+				bHeld = _impl->bHeld;
+			}
 
-			bool bPressed() { return m_Impl->bPressed; }	// Set once during the frame the event occurs
-			bool bReleased() { return m_Impl->bReleased; }	// Set once during the frame the event occurs
-			bool bHeld() { return m_Impl->bHeld; }			// Set true for all frames between pressed and released events
+			bool bPressed = false;		// Set once during the frame the event occurs
+			bool bReleased = false;		// Set once during the frame the event occurs
+			bool bHeld = false;			// Set true for all frames between pressed and released events
 
 			HWButton* GetImplementation() { return m_Impl; }
 		};
@@ -322,13 +340,13 @@ namespace olc {
 			// Draws a rectangle at (x,y) to (x+w,y+h)
 			void DrawRect(int32_t x, int32_t y, int32_t w, int32_t h, PixelManaged^ p);
 			void DrawRect(int32_t x, int32_t y, int32_t w, int32_t h);
-			void DrawRect(vi2dm^ pos, vi2dm^ size, PixelManaged^ p );
+			void DrawRect(vi2dm^ pos, vi2dm^ size, PixelManaged^ p);
 			void DrawRect(vi2dm^ pos, vi2dm^ size);
-			
+
 			// Fills a rectangle at (x,y) to (x+w,y+h)
-			void FillRect(int32_t x, int32_t y, int32_t w, int32_t h, PixelManaged^ p );
+			void FillRect(int32_t x, int32_t y, int32_t w, int32_t h, PixelManaged^ p);
 			void FillRect(int32_t x, int32_t y, int32_t w, int32_t h);
-			void FillRect(vi2dm^ pos, vi2dm^ size, PixelManaged^ p );
+			void FillRect(vi2dm^ pos, vi2dm^ size, PixelManaged^ p);
 			void FillRect(vi2dm^ pos, vi2dm^ size);
 
 			void Clear(PixelManaged^ p);
@@ -395,7 +413,7 @@ namespace olc {
 	{
 
 		// =========== olcPixelGameEngineWithOwner ===================
-		
+
 		// Called once on application startup, use to load your resources
 		bool olcPixelGameEngineWithOwner::OnUserCreate() {
 			return m_owner->CallOnUserCreate();
@@ -410,7 +428,7 @@ namespace olc {
 		{
 			return m_owner->CallOnUserDestroy();
 		}
-		
+
 
 		// -------- Resource Pack --------
 		bool ResourcePackManaged::AddFile(System::String^ sFile)
