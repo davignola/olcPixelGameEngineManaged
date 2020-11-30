@@ -12,6 +12,9 @@ namespace Example
         {
             // Called once at the start, so create things here
             olcPGEXSoundManaged.InitialiseAudio();
+
+            var test  = new vf2dm(2f,2f);
+
             return true;
         }
 

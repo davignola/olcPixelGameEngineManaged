@@ -99,7 +99,7 @@ namespace olc {
 			}
 			v2d_genericManaged(T _x, T _y)
 			{
-				m_Impl = new v2d_generic<T>(x, y);
+				m_Impl = new v2d_generic<T>(_x, _y);
 				x = m_Impl->x;
 				y = m_Impl->y;
 			}
@@ -414,15 +414,15 @@ namespace olc {
 			// Decal Quad functions
 			void SetDecalMode(DecalModeManaged mode);
 			// Draws a whole decal, with optional scale and tinting
-			void DrawDecal(vi2dm^ pos, DecalManaged^ decal, vi2dm^ scale, PixelManaged^ tint);
-			void DrawDecal(vi2dm^ pos, DecalManaged^ decal, vi2dm^ scale);
-			void DrawDecal(vi2dm^ pos, DecalManaged^ decal);
+			void DrawDecal(vf2dm^ pos, DecalManaged^ decal, vf2dm^ scale, PixelManaged^ tint);
+			void DrawDecal(vf2dm^ pos, DecalManaged^ decal, vf2dm^ scale);
+			void DrawDecal(vf2dm^ pos, DecalManaged^ decal);
 			// Draws a region of a decal, with optional scale and tinting
-			void DrawPartialDecal(vi2dm^ pos, DecalManaged^ decal, vi2dm^ source_pos, vi2dm^ source_size, vi2dm^ scale, PixelManaged^ tint);
-			void DrawPartialDecal(vi2dm^ pos, DecalManaged^ decal, vi2dm^ source_pos, vi2dm^ source_size, vi2dm^ scale);
-			void DrawPartialDecal(vi2dm^ pos, DecalManaged^ decal, vi2dm^ source_pos, vi2dm^ source_size);
-			void DrawPartialDecal(vi2dm^ pos, vi2dm^ size, DecalManaged^ decal, vi2dm^ source_pos, vi2dm^ source_size, PixelManaged^ tint);
-			void DrawPartialDecal(vi2dm^ pos, vi2dm^ size, DecalManaged^ decal, vi2dm^ source_pos, vi2dm^ source_size);
+			void DrawPartialDecal(vf2dm^ pos, DecalManaged^ decal, vf2dm^ source_pos, vf2dm^ source_size, vf2dm^ scale, PixelManaged^ tint);
+			void DrawPartialDecal(vf2dm^ pos, DecalManaged^ decal, vf2dm^ source_pos, vf2dm^ source_size, vf2dm^ scale);
+			void DrawPartialDecal(vf2dm^ pos, DecalManaged^ decal, vf2dm^ source_pos, vf2dm^ source_size);
+			void DrawPartialDecal(vf2dm^ pos, vf2dm^ size, DecalManaged^ decal, vf2dm^ source_pos, vf2dm^ source_size, PixelManaged^ tint);
+			void DrawPartialDecal(vf2dm^ pos, vf2dm^ size, DecalManaged^ decal, vf2dm^ source_pos, vf2dm^ source_size);
 			// Draws fully user controlled 4 vertices, pos(pixels), uv(pixels), colours
 			void DrawExplicitDecal(DecalManaged^ decal, vf2dm^ pos, vf2dm^ uv, PixelManaged^ col);
 			// Draws a decal with 4 arbitrary points, warping the texture to look "correct"
@@ -433,28 +433,28 @@ namespace olc {
 			// As above, but you can specify a region of a decal source sprite
 			void DrawPartialWarpedDecal(DecalManaged^ decal, vf2dm^ pos, vf2dm^ source_pos, vf2dm^ source_size, PixelManaged^ tint);
 			void DrawPartialWarpedDecal(DecalManaged^ decal, vf2dm^ pos, vf2dm^ source_pos, vf2dm^ source_size);
-			void DrawPartialWarpedDecal(DecalManaged^ decal, List<vf2dm^>^ pos, vi2dm^ source_pos, vi2dm^ source_size, PixelManaged^ tint);
-			void DrawPartialWarpedDecal(DecalManaged^ decal, List<vf2dm^>^ pos, vi2dm^ source_pos, vi2dm^ source_size);
+			void DrawPartialWarpedDecal(DecalManaged^ decal, List<vf2dm^>^ pos, vf2dm^ source_pos, vf2dm^ source_size, PixelManaged^ tint);
+			void DrawPartialWarpedDecal(DecalManaged^ decal, List<vf2dm^>^ pos, vf2dm^ source_pos, vf2dm^ source_size);
 			// Draws a decal rotated to specified angle, wit point of rotation offset
-			void DrawRotatedDecal(vi2dm^ pos, DecalManaged^ decal, float fAngle, vi2dm^ center, vi2dm^ scale, PixelManaged^ tint);
-			void DrawRotatedDecal(vi2dm^ pos, DecalManaged^ decal, float fAngle, vi2dm^ center, vi2dm^ scale);
-			void DrawRotatedDecal(vi2dm^ pos, DecalManaged^ decal, float fAngle, vi2dm^ center);
-			void DrawRotatedDecal(vi2dm^ pos, DecalManaged^ decal, float fAngle);
-			void DrawPartialRotatedDecal(vi2dm^ pos, DecalManaged^ decal, float fAngle, vi2dm^ center, vi2dm^ source_pos, vi2dm^ source_size, vi2dm^ scale, PixelManaged^ tint);
-			void DrawPartialRotatedDecal(vi2dm^ pos, DecalManaged^ decal, float fAngle, vi2dm^ center, vi2dm^ source_pos, vi2dm^ source_size, vi2dm^ scale);
-			void DrawPartialRotatedDecal(vi2dm^ pos, DecalManaged^ decal, float fAngle, vi2dm^ center, vi2dm^ source_pos, vi2dm^ source_size);
+			void DrawRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle, vf2dm^ center, vf2dm^ scale, PixelManaged^ tint);
+			void DrawRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle, vf2dm^ center, vf2dm^ scale);
+			void DrawRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle, vf2dm^ center);
+			void DrawRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle);
+			void DrawPartialRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle, vf2dm^ center, vf2dm^ source_pos, vf2dm^ source_size, vf2dm^ scale, PixelManaged^ tint);
+			void DrawPartialRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle, vf2dm^ center, vf2dm^ source_pos, vf2dm^ source_size, vf2dm^ scale);
+			void DrawPartialRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle, vf2dm^ center, vf2dm^ source_pos, vf2dm^ source_size);
 			// Draws a multiline string as a decal, with tiniting and scaling
-			void DrawStringDecal(vi2dm^ pos, System::String^ sText, PixelManaged^ col, vi2dm^ scale);
-			void DrawStringDecal(vi2dm^ pos, System::String^ sText, PixelManaged^ col);
-			void DrawStringDecal(vi2dm^ pos, System::String^ sText);
-			void DrawStringPropDecal(vi2dm^ pos, System::String^ sText, PixelManaged^ col, vi2dm^ scale);
-			void DrawStringPropDecal(vi2dm^ pos, System::String^ sText, PixelManaged^ col);
-			void DrawStringPropDecal(vi2dm^ pos, System::String^ sText);
+			void DrawStringDecal(vf2dm^ pos, System::String^ sText, PixelManaged^ col, vf2dm^ scale);
+			void DrawStringDecal(vf2dm^ pos, System::String^ sText, PixelManaged^ col);
+			void DrawStringDecal(vf2dm^ pos, System::String^ sText);
+			void DrawStringPropDecal(vf2dm^ pos, System::String^ sText, PixelManaged^ col, vf2dm^ scale);
+			void DrawStringPropDecal(vf2dm^ pos, System::String^ sText, PixelManaged^ col);
+			void DrawStringPropDecal(vf2dm^ pos, System::String^ sText);
 			// Draws a single shaded filled rectangle as a decal
-			void FillRectDecal(vi2dm^ pos, vi2dm^ size, PixelManaged^ col);
-			void FillRectDecal(vi2dm^ pos, vi2dm^ size);
+			void FillRectDecal(vf2dm^ pos, vf2dm^ size, PixelManaged^ col);
+			void FillRectDecal(vf2dm^ pos, vf2dm^ size);
 			// Draws a corner shaded rectangle as a decal
-			void GradientFillRectDecal(vi2dm^ pos, vi2dm^ size, PixelManaged^ colTL, PixelManaged^ colBL, PixelManaged^ colBR, PixelManaged^ colTR);
+			void GradientFillRectDecal(vf2dm^ pos, vf2dm^ size, PixelManaged^ colTL, PixelManaged^ colBL, PixelManaged^ colBR, PixelManaged^ colTR);
 
 			void Clear(PixelManaged^ p);
 
@@ -831,42 +831,42 @@ namespace olc {
 		}
 
 		// ---------- Decals -----------
-// Decal Quad functions
+		// Decal Quad functions
 		void PixelGameEngineManaged::SetDecalMode(DecalModeManaged mode)
 		{
 			m_Impl->SetDecalMode((DecalMode)mode);
 		}
 		// Draws a whole decal, with optional scale and tinting
-		void PixelGameEngineManaged::DrawDecal(vi2dm^ pos, DecalManaged^ decal, vi2dm^ scale, PixelManaged^ tint)
+		void PixelGameEngineManaged::DrawDecal(vf2dm^ pos, DecalManaged^ decal, vf2dm^ scale, PixelManaged^ tint)
 		{
 			m_Impl->DrawDecal(*pos->GetImplementation(), decal->GetImplementation(), *scale->GetImplementation(), *tint->GetImplementation());
 		}
-		void PixelGameEngineManaged::DrawDecal(vi2dm^ pos, DecalManaged^ decal, vi2dm^ scale)
+		void PixelGameEngineManaged::DrawDecal(vf2dm^ pos, DecalManaged^ decal, vf2dm^ scale)
 		{
 			m_Impl->DrawDecal(*pos->GetImplementation(), decal->GetImplementation(), *scale->GetImplementation());
 		}
-		void PixelGameEngineManaged::DrawDecal(vi2dm^ pos, DecalManaged^ decal)
+		void PixelGameEngineManaged::DrawDecal(vf2dm^ pos, DecalManaged^ decal)
 		{
 			m_Impl->DrawDecal(*pos->GetImplementation(), decal->GetImplementation());
 		}
 		// Draws a region of a decal, with optional scale and tinting
-		void PixelGameEngineManaged::DrawPartialDecal(vi2dm^ pos, DecalManaged^ decal, vi2dm^ source_pos, vi2dm^ source_size, vi2dm^ scale, PixelManaged^ tint)
+		void PixelGameEngineManaged::DrawPartialDecal(vf2dm^ pos, DecalManaged^ decal, vf2dm^ source_pos, vf2dm^ source_size, vf2dm^ scale, PixelManaged^ tint)
 		{
 			m_Impl->DrawPartialDecal(*pos->GetImplementation(), decal->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation(), *scale->GetImplementation(), *tint->GetImplementation());
 		}
-		void PixelGameEngineManaged::DrawPartialDecal(vi2dm^ pos, DecalManaged^ decal, vi2dm^ source_pos, vi2dm^ source_size, vi2dm^ scale)
+		void PixelGameEngineManaged::DrawPartialDecal(vf2dm^ pos, DecalManaged^ decal, vf2dm^ source_pos, vf2dm^ source_size, vf2dm^ scale)
 		{
 			m_Impl->DrawPartialDecal(*pos->GetImplementation(), decal->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation(), *scale->GetImplementation());
 		}
-		void PixelGameEngineManaged::DrawPartialDecal(vi2dm^ pos, DecalManaged^ decal, vi2dm^ source_pos, vi2dm^ source_size)
+		void PixelGameEngineManaged::DrawPartialDecal(vf2dm^ pos, DecalManaged^ decal, vf2dm^ source_pos, vf2dm^ source_size)
 		{
 			m_Impl->DrawPartialDecal(*pos->GetImplementation(), decal->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation());
 		}
-		void PixelGameEngineManaged::DrawPartialDecal(vi2dm^ pos, vi2dm^ size, DecalManaged^ decal, vi2dm^ source_pos, vi2dm^ source_size, PixelManaged^ tint)
+		void PixelGameEngineManaged::DrawPartialDecal(vf2dm^ pos, vf2dm^ size, DecalManaged^ decal, vf2dm^ source_pos, vf2dm^ source_size, PixelManaged^ tint)
 		{
 			m_Impl->DrawPartialDecal(*pos->GetImplementation(), *size->GetImplementation(), decal->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation(), *tint->GetImplementation());
 		}
-		void PixelGameEngineManaged::DrawPartialDecal(vi2dm^ pos, vi2dm^ size, DecalManaged^ decal, vi2dm^ source_pos, vi2dm^ source_size)
+		void PixelGameEngineManaged::DrawPartialDecal(vf2dm^ pos, vf2dm^ size, DecalManaged^ decal, vf2dm^ source_pos, vf2dm^ source_size)
 		{
 			m_Impl->DrawPartialDecal(*pos->GetImplementation(), *size->GetImplementation(), decal->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation());
 		}
@@ -905,83 +905,83 @@ namespace olc {
 		{
 			m_Impl->DrawPartialWarpedDecal(decal->GetImplementation(), pos->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation());
 		}
-		void PixelGameEngineManaged::DrawPartialWarpedDecal(DecalManaged^ decal, List<vf2dm^>^ pos, vi2dm^ source_pos, vi2dm^ source_size, PixelManaged^ tint)
+		void PixelGameEngineManaged::DrawPartialWarpedDecal(DecalManaged^ decal, List<vf2dm^>^ pos, vf2dm^ source_pos, vf2dm^ source_size, PixelManaged^ tint)
 		{
 			// Language doesn't let me set this in a loop, no idea why....
 			const std::array<vf2d, 4> posNative = { *pos[0]->GetImplementation(), *pos[1]->GetImplementation(),*pos[2]->GetImplementation(),*pos[3]->GetImplementation() };
 			m_Impl->DrawPartialWarpedDecal(decal->GetImplementation(), posNative, *source_pos->GetImplementation(), *source_size->GetImplementation(), *tint->GetImplementation());
 		}
-		void PixelGameEngineManaged::DrawPartialWarpedDecal(DecalManaged^ decal, List<vf2dm^>^ pos, vi2dm^ source_pos, vi2dm^ source_size)
+		void PixelGameEngineManaged::DrawPartialWarpedDecal(DecalManaged^ decal, List<vf2dm^>^ pos, vf2dm^ source_pos, vf2dm^ source_size)
 		{
 			// Language doesn't let me set this in a loop, no idea why....
 			const std::array<vf2d, 4> posNative = { *pos[0]->GetImplementation(), *pos[1]->GetImplementation(),*pos[2]->GetImplementation(),*pos[3]->GetImplementation() };
 			m_Impl->DrawPartialWarpedDecal(decal->GetImplementation(), posNative, *source_pos->GetImplementation(), *source_size->GetImplementation());
 		}
 		// Draws a decal rotated to specified angle, wit point of rotation offset
-		void PixelGameEngineManaged::DrawRotatedDecal(vi2dm^ pos, DecalManaged^ decal, float fAngle, vi2dm^ center, vi2dm^ scale, PixelManaged^ tint)
+		void PixelGameEngineManaged::DrawRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle, vf2dm^ center, vf2dm^ scale, PixelManaged^ tint)
 		{
 			m_Impl->DrawRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle, *center->GetImplementation(), *scale->GetImplementation(), *tint->GetImplementation());
 		}
-		void PixelGameEngineManaged::DrawRotatedDecal(vi2dm^ pos, DecalManaged^ decal, float fAngle, vi2dm^ center, vi2dm^ scale)
+		void PixelGameEngineManaged::DrawRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle, vf2dm^ center, vf2dm^ scale)
 		{
 			m_Impl->DrawRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle, *center->GetImplementation(), *scale->GetImplementation());
 		}
-		void PixelGameEngineManaged::DrawRotatedDecal(vi2dm^ pos, DecalManaged^ decal, float fAngle, vi2dm^ center)
+		void PixelGameEngineManaged::DrawRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle, vf2dm^ center)
 		{
 			m_Impl->DrawRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle, *center->GetImplementation());
 		}
-		void PixelGameEngineManaged::DrawRotatedDecal(vi2dm^ pos, DecalManaged^ decal, float fAngle)
+		void PixelGameEngineManaged::DrawRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle)
 		{
 			m_Impl->DrawRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle);
 		}
-		void PixelGameEngineManaged::DrawPartialRotatedDecal(vi2dm^ pos, DecalManaged^ decal, float fAngle, vi2dm^ center, vi2dm^ source_pos, vi2dm^ source_size, vi2dm^ scale, PixelManaged^ tint)
+		void PixelGameEngineManaged::DrawPartialRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle, vf2dm^ center, vf2dm^ source_pos, vf2dm^ source_size, vf2dm^ scale, PixelManaged^ tint)
 		{
 			m_Impl->DrawPartialRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle, *center->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation(), *scale->GetImplementation(), *tint->GetImplementation());
 		}
-		void PixelGameEngineManaged::DrawPartialRotatedDecal(vi2dm^ pos, DecalManaged^ decal, float fAngle, vi2dm^ center, vi2dm^ source_pos, vi2dm^ source_size, vi2dm^ scale)
+		void PixelGameEngineManaged::DrawPartialRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle, vf2dm^ center, vf2dm^ source_pos, vf2dm^ source_size, vf2dm^ scale)
 		{
 			m_Impl->DrawPartialRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle, *center->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation(), *scale->GetImplementation());
 		}
-		void PixelGameEngineManaged::DrawPartialRotatedDecal(vi2dm^ pos, DecalManaged^ decal, float fAngle, vi2dm^ center, vi2dm^ source_pos, vi2dm^ source_size)
+		void PixelGameEngineManaged::DrawPartialRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle, vf2dm^ center, vf2dm^ source_pos, vf2dm^ source_size)
 		{
 			m_Impl->DrawPartialRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle, *center->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation());
 		}
 		// Draws a multiline string as a decal, with tiniting and scaling
-		void PixelGameEngineManaged::DrawStringDecal(vi2dm^ pos, System::String^ sText, PixelManaged^ col, vi2dm^ scale)
+		void PixelGameEngineManaged::DrawStringDecal(vf2dm^ pos, System::String^ sText, PixelManaged^ col, vf2dm^ scale)
 		{
 			m_Impl->DrawStringDecal(*pos->GetImplementation(), Util::MarshalString(sText), *col->GetImplementation(), *scale->GetImplementation());
 		}
-		void PixelGameEngineManaged::DrawStringDecal(vi2dm^ pos, System::String^ sText, PixelManaged^ col)
+		void PixelGameEngineManaged::DrawStringDecal(vf2dm^ pos, System::String^ sText, PixelManaged^ col)
 		{
 			m_Impl->DrawStringDecal(*pos->GetImplementation(), Util::MarshalString(sText), *col->GetImplementation());
 		}
-		void PixelGameEngineManaged::DrawStringDecal(vi2dm^ pos, System::String^ sText)
+		void PixelGameEngineManaged::DrawStringDecal(vf2dm^ pos, System::String^ sText)
 		{
 			m_Impl->DrawStringDecal(*pos->GetImplementation(), Util::MarshalString(sText));
 		}
-		void PixelGameEngineManaged::DrawStringPropDecal(vi2dm^ pos, System::String^ sText, PixelManaged^ col, vi2dm^ scale)
+		void PixelGameEngineManaged::DrawStringPropDecal(vf2dm^ pos, System::String^ sText, PixelManaged^ col, vf2dm^ scale)
 		{
 			m_Impl->DrawStringPropDecal(*pos->GetImplementation(), Util::MarshalString(sText), *col->GetImplementation(), *scale->GetImplementation());
 		}
-		void PixelGameEngineManaged::DrawStringPropDecal(vi2dm^ pos, System::String^ sText, PixelManaged^ col)
+		void PixelGameEngineManaged::DrawStringPropDecal(vf2dm^ pos, System::String^ sText, PixelManaged^ col)
 		{
 			m_Impl->DrawStringPropDecal(*pos->GetImplementation(), Util::MarshalString(sText), *col->GetImplementation());
 		}
-		void PixelGameEngineManaged::DrawStringPropDecal(vi2dm^ pos, System::String^ sText)
+		void PixelGameEngineManaged::DrawStringPropDecal(vf2dm^ pos, System::String^ sText)
 		{
 			m_Impl->DrawStringPropDecal(*pos->GetImplementation(), Util::MarshalString(sText));
 		}
 		// Draws a single shaded filled rectangle as a decal
-		void PixelGameEngineManaged::FillRectDecal(vi2dm^ pos, vi2dm^ size, PixelManaged^ col)
+		void PixelGameEngineManaged::FillRectDecal(vf2dm^ pos, vf2dm^ size, PixelManaged^ col)
 		{
 			m_Impl->FillRectDecal(*pos->GetImplementation(), *size->GetImplementation(), *col->GetImplementation());
 		}
-		void PixelGameEngineManaged::FillRectDecal(vi2dm^ pos, vi2dm^ size)
+		void PixelGameEngineManaged::FillRectDecal(vf2dm^ pos, vf2dm^ size)
 		{
 			m_Impl->FillRectDecal(*pos->GetImplementation(), *size->GetImplementation());
 		}
 		// Draws a corner shaded rectangle as a decal
-		void PixelGameEngineManaged::GradientFillRectDecal(vi2dm^ pos, vi2dm^ size, PixelManaged^ colTL, PixelManaged^ colBL, PixelManaged^ colBR, PixelManaged^ colTR)
+		void PixelGameEngineManaged::GradientFillRectDecal(vf2dm^ pos, vf2dm^ size, PixelManaged^ colTL, PixelManaged^ colBL, PixelManaged^ colBR, PixelManaged^ colTR)
 		{
 			m_Impl->GradientFillRectDecal(*pos->GetImplementation(), *size->GetImplementation(), *colTL->GetImplementation(), *colBL->GetImplementation(), *colBR->GetImplementation(), *colTR->GetImplementation());
 		}
