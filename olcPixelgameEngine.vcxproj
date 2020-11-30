@@ -33,7 +33,7 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Extensions\Managed\Includes.cpp" />
+    <ClCompile Include="Extensions\Includes.cpp" />
     <ClCompile Include="Extensions\Managed\Wrapper\olcPGEX_SoundWrapper.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
