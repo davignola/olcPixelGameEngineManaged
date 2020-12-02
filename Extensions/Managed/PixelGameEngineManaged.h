@@ -163,6 +163,8 @@ namespace olc {
 
 		public:
 
+			enum class Mode { NORMAL, MASK, ALPHA, CUSTOM };
+
 			PixelManaged() { m_Impl = new Pixel(); }
 			PixelManaged(uint8_t red, uint8_t green, uint8_t blue) { m_Impl = new Pixel(red, green, blue); }
 			PixelManaged(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) { m_Impl = new Pixel(red, green, blue, alpha); }
@@ -299,13 +301,8 @@ namespace olc {
 			DecalManaged(SpriteManaged^ spr, bool filter) { m_Impl = new Decal(spr->GetImplementation(), filter); }
 			DecalManaged(SpriteManaged^ spr) { m_Impl = new Decal(spr->GetImplementation()); }
 			DecalManaged(Decal* impl) { m_Impl = impl; }
-			/*virtual ~DecalManaged() { this->!DecalManaged(); }
-			!DecalManaged() {
-				if (m_Impl) {
-					delete m_Impl;
-					m_Impl = 0;
-				}
-			}*/
+
+
 			void Update();
 
 			Decal* GetImplementation() { return m_Impl; }
@@ -320,21 +317,269 @@ namespace olc {
 			ILLUMINATE,
 		};
 
+
+		public ref struct DecalInstanceManaged
+		{
+		private:
+			DecalInstance* m_Impl;
+
+			DecalManaged^ decal;
+			array<vf2dm^>^ pos;
+			array<vf2dm^>^ uv;
+			array<float>^ w;
+			array<PixelManaged^>^ tint;
+			DecalModeManaged mode;
+
+		public:
+			DecalInstanceManaged()
+			{
+				m_Impl = new DecalInstance();
+				CopyFromNative();
+			}
+			DecalInstanceManaged(DecalInstance* impl)
+			{
+				m_Impl = impl;
+				CopyFromNative();
+			}
+			DecalInstance* GetImplementation() { return m_Impl; }
+
+			void CopyFromNative()
+			{
+				if (pos == nullptr) { pos = gcnew array<vf2dm^>(4); }
+				if (uv == nullptr) { uv = gcnew array<vf2dm^>(4); }
+				if (w == nullptr) { w = gcnew array<float>(4); }
+				if (tint == nullptr) { tint = gcnew array<PixelManaged^>(4); }
+
+				decal = gcnew DecalManaged(m_Impl->decal);
+				for (int i = 0; i < 4; ++i)
+				{
+					pos[i] = gcnew vf2dm((&m_Impl->pos)[i]);
+					uv[i] = gcnew vf2dm((&m_Impl->uv)[i]);
+					w[i] = *(&m_Impl->w)[i];
+					tint[i] = gcnew PixelManaged((&m_Impl->tint)[i]);
+				}
+				mode = (DecalModeManaged)m_Impl->mode;
+			}
+
+			property DecalManaged^ Decal {
+		public: DecalManaged^ get() { return decal; }
+		public: void set(DecalManaged^ value)
+		{
+			decal = value;
+			m_Impl->decal = value->GetImplementation();
+		}
+			}
+
+			property array<vf2dm^>^ Pos {
+		public: array<vf2dm^>^ get() { return pos; }
+		public: void set(array<vf2dm^>^ value)
+		{
+			pos = value;
+			auto refArray = &m_Impl->pos;
+
+			for (int i = 0; i < sizeof(refArray); ++i)
+			{
+				*refArray[i] = *value[i]->GetImplementation();
+			}
+		}
+			}
+
+			property array<vf2dm^>^ Uv {
+		public: array<vf2dm^>^ get() { return uv; }
+		public: void set(array<vf2dm^>^ value)
+		{
+			uv = value;
+			auto refArray = &m_Impl->uv;
+
+			for (int i = 0; i < sizeof(refArray); ++i)
+			{
+				*refArray[i] = *value[i]->GetImplementation();
+			}
+		}
+			}
+
+			property array<float>^ W {
+		public: array<float>^ get() { return w; }
+		public: void set(array<float>^ value)
+		{
+			w = value;
+			auto refArray = &m_Impl->w;
+
+			for (int i = 0; i < sizeof(refArray); ++i)
+			{
+				*refArray[i] = value[i];
+			}
+		}
+			}
+
+			property array<PixelManaged^>^ Tint {
+		public: array<PixelManaged^>^ get() { return tint; }
+		public: void set(array<PixelManaged^>^ value)
+		{
+			tint = value;
+			auto refArray = &m_Impl->tint;
+
+			for (int i = 0; i < sizeof(refArray); ++i)
+			{
+				*refArray[i] = *value[i]->GetImplementation();
+			}
+		}
+			}
+
+			property DecalModeManaged Mode {
+		public: DecalModeManaged get() { return mode; }
+		public: void set(DecalModeManaged value)
+		{
+			mode = value;
+			m_Impl->mode = (DecalMode)value;
+		}
+			}
+		};
+
+		// LayerDesc
+		public ref struct LayerDescManaged
+		{
+		private:
+			LayerDesc* m_Impl;
+
+			vf2dm^ vOffset;
+			vf2dm^ vScale;
+			bool bShow = false;
+			bool bUpdate = false;
+			SpriteManaged^ pDrawTarget;
+			uint32_t nResID;
+			List<DecalInstanceManaged^>^ vecDecalInstance;
+			PixelManaged^ tint;
+			//System::Action^ funcHook;
+
+		public:
+			LayerDescManaged()
+			{
+				m_Impl = new LayerDesc();
+				CopyFromNative();
+			}
+			LayerDescManaged(LayerDesc* impl)
+			{
+				m_Impl = impl;
+				CopyFromNative();
+			}
+			LayerDesc* GetImplementation() { return m_Impl; }
+
+			void CopyFromNative()
+			{
+				if (vecDecalInstance == nullptr) { vecDecalInstance = gcnew List<DecalInstanceManaged^>(); }
+
+				vOffset = gcnew vf2dm(&m_Impl->vOffset);
+				vScale = gcnew vf2dm(&m_Impl->vScale);
+				bShow = bShow;
+				bUpdate = bUpdate;
+				pDrawTarget = gcnew SpriteManaged(m_Impl->pDrawTarget);
+				nResID = nResID;
+				tint = gcnew PixelManaged(&m_Impl->tint);
+				vecDecalInstance->Clear();
+				for (int i = 0; i < 4; ++i)
+				{
+					vecDecalInstance->Add(gcnew DecalInstanceManaged(&(&m_Impl->vecDecalInstance)->at(i)));
+				}
+			}
+
+			property vf2dm^ Offset {
+		public: vf2dm^ get() { return vOffset; }
+		public: void set(vf2dm^ value)
+		{
+			vOffset = value;
+			m_Impl->vOffset = *value->GetImplementation();
+		}
+			}
+
+
+			property vf2dm^ Scale {
+		public: vf2dm^ get() { return vScale; }
+		public: void set(vf2dm^ value)
+		{
+			vScale = value;
+			m_Impl->vScale = *value->GetImplementation();
+		}
+			}
+
+			property bool Show {
+		public: bool get() { return bShow; }
+		public: void set(bool value)
+		{
+			bShow = value;
+			m_Impl->bShow = value;
+		}
+			}
+
+			property bool Update {
+		public: bool get() { return bUpdate; }
+		public: void set(bool value)
+		{
+			bUpdate = value;
+			m_Impl->bUpdate = value;
+		}
+			}
+
+			property SpriteManaged^ DrawTarget {
+		public: SpriteManaged^ get() { return pDrawTarget; }
+		public: void set(SpriteManaged^ value)
+		{
+			pDrawTarget = value;
+			m_Impl->pDrawTarget = value->GetImplementation();
+		}
+			}
+
+			property uint32_t ResID {
+		public: uint32_t get() { return nResID; }
+		public: void set(uint32_t value)
+		{
+			nResID = value;
+			m_Impl->nResID = value;
+		}
+			}
+
+			property List<DecalInstanceManaged^>^ DecalInstance {
+		public: List<DecalInstanceManaged^>^ get() { return vecDecalInstance; }
+		public: void set(List<DecalInstanceManaged^>^ value)
+		{
+			vecDecalInstance = value;
+			auto refArray = &m_Impl->vecDecalInstance;
+
+			for (int i = 0; i < sizeof(refArray); ++i)
+			{
+				refArray->at(i) = *value[i]->GetImplementation();
+			}
+		}
+			}
+
+			property PixelManaged^ Tint {
+		public: PixelManaged^ get() { return tint; }
+		public: void set(PixelManaged^ value)
+		{
+			tint = value;
+			m_Impl->tint = *value->GetImplementation();
+		}
+			}
+
+		};
+
+
+
 		/// <summary>
 		///  Managed wrapper class
 		/// </summary>
 
 		public ref class PixelGameEngineManaged abstract {
 		private:
-			PixelGameEngine* m_Impl;
+			PixelGameEngine* nativeImpl;
 
 		public:
-			PixelGameEngineManaged() { m_Impl = new olcPixelGameEngineWithOwner(this); }
+			PixelGameEngineManaged() { nativeImpl = new olcPixelGameEngineWithOwner(this); }
 			~PixelGameEngineManaged() { this->!PixelGameEngineManaged(); }
 			!PixelGameEngineManaged() {
-				if (m_Impl) {
-					delete m_Impl;
-					m_Impl = 0;
+				if (nativeImpl) {
+					delete nativeImpl;
+					nativeImpl = 0;
 				}
 			}
 		public:
@@ -370,11 +615,59 @@ namespace olc {
 			rcodeManaged Construct(int32_t screen_w, int32_t screen_h, int32_t pixel_w, int32_t pixel_h);
 			rcodeManaged Start();
 
-			void SetScreenSize(int w, int h);
 
+		public: // Utilities
+			// Returns the width of the screen in "pixels"
 			int32_t ScreenWidth();
-
+			// Returns the height of the screen in "pixels"
 			int32_t ScreenHeight();
+			// Returns the width of the currently selected drawing target in "pixels"
+			int32_t GetDrawTargetWidth();
+			// Returns the height of the currently selected drawing target in "pixels"
+			int32_t GetDrawTargetHeight();
+			// Returns the currently active draw target
+			SpriteManaged^ GetDrawTarget();
+			// Resize the primary screen sprite
+			void SetScreenSize(int w, int h);
+			// Specify which Sprite should be the target of drawing functions, use nullptr
+			// to specify the primary screen
+			void SetDrawTarget(SpriteManaged^ target);
+			// Gets the current Frames Per Second
+			uint32_t GetFPS();
+			// Gets last update of elapsed time
+			float GetElapsedTime();
+			// Gets Actual Window size
+			vi2dm^ GetWindowSize();
+			// Gets pixel scale
+			vi2dm^ GetPixelSize();
+			// Gets actual pixel scale
+			vi2dm^ GetScreenPixelSize();
+
+		public: // CONFIGURATION ROUTINES
+			// Layer targeting functions
+			void SetDrawTarget(uint8_t layer);
+			void EnableLayer(uint8_t layer, bool b);
+			void SetLayerOffset(uint8_t layer, vf2dm^ offset);
+			void SetLayerOffset(uint8_t layer, float x, float y);
+			void SetLayerScale(uint8_t layer, vf2dm^ scale);
+			void SetLayerScale(uint8_t layer, float x, float y);
+			void SetLayerTint(uint8_t layer, PixelManaged^ tint);
+			//void SetLayerCustomRenderFunction(uint8_t layer, System::Action^);
+
+			List<LayerDescManaged^>^ GetLayers();
+			uint32_t CreateLayer();
+
+			// Change the pixel mode for different optimisations
+			// olc::Pixel::NORMAL = No transparency
+			// olc::Pixel::MASK   = Transparent if alpha is < 255
+			// olc::Pixel::ALPHA  = Full transparency
+			void SetPixelMode(PixelManaged::Mode m);
+			PixelManaged::Mode GetPixelMode();
+			// Use a custom blend function
+			//void SetPixelMode(std::function<olc::Pixel(const int x, const int y, const olc::Pixel& pSource, const olc::Pixel& pDest)> pixelMode);
+			// Change the blend factor form between 0.0f to 1.0f;
+			void SetPixelBlend(float fBlend);
+
 
 		public: // Drawing
 
@@ -409,6 +702,37 @@ namespace olc {
 			void FillRect(int32_t x, int32_t y, int32_t w, int32_t h);
 			void FillRect(vi2dm^ pos, vi2dm^ size, PixelManaged^ p);
 			void FillRect(vi2dm^ pos, vi2dm^ size);
+
+			// Draws a line from (x1,y1) to (x2,y2)
+			void DrawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2, PixelManaged^ p, uint32_t pattern);
+			void DrawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2, PixelManaged^ p);
+			void DrawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2);
+			void DrawLine(vi2dm^ pos1, vi2dm^ pos2, PixelManaged^ p, uint32_t pattern);
+			void DrawLine(vi2dm^ pos1, vi2dm^ pos2, PixelManaged^ p);
+			void DrawLine(vi2dm^ pos1, vi2dm^ pos2);
+			// Draws a circle located at (x,y) with radius
+			void DrawCircle(int32_t x, int32_t y, int32_t radius, PixelManaged^ p, uint8_t mask);
+			void DrawCircle(int32_t x, int32_t y, int32_t radius, PixelManaged^ p);
+			void DrawCircle(int32_t x, int32_t y, int32_t radius);
+			void DrawCircle(vi2dm^ pos, int32_t radius, PixelManaged^ p, uint8_t mask);
+			void DrawCircle(vi2dm^ pos, int32_t radius, PixelManaged^ p);
+			void DrawCircle(vi2dm^ pos, int32_t radius);
+			// Fills a circle located at (x,y) with radius
+			void FillCircle(int32_t x, int32_t y, int32_t radius, PixelManaged^ p);
+			void FillCircle(int32_t x, int32_t y, int32_t radius);
+			void FillCircle(vi2dm^ pos, int32_t radius, PixelManaged^ p);
+			void FillCircle(vi2dm^ pos, int32_t radius);
+
+			// Draws a triangle between points (x1,y1), (x2,y2) and (x3,y3)
+			void DrawTriangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int32_t y3, PixelManaged^ p);
+			void DrawTriangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int32_t y3);
+			void DrawTriangle(vi2dm^ pos1, vi2dm^ pos2, vi2dm^ pos3, PixelManaged^ p);
+			void DrawTriangle(vi2dm^ pos1, vi2dm^ pos2, vi2dm^ pos3);
+			// Flat fills a triangle between points (x1,y1), (x2,y2) and (x3,y3)
+			void FillTriangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int32_t y3, PixelManaged^ p);
+			void FillTriangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int32_t y3);
+			void FillTriangle(vi2dm^ pos1, vi2dm^ pos2, vi2dm^ pos3, PixelManaged^ p);
+			void FillTriangle(vi2dm^ pos1, vi2dm^ pos2, vi2dm^ pos3);
 
 			// ---------- Decals -----------
 			// Decal Quad functions
@@ -461,17 +785,17 @@ namespace olc {
 		internal:
 			bool CallOnUserCreate()
 			{
-				if (!m_Impl) throw gcnew System::ObjectDisposedException("olcPixelGameEngineWithOwner");
+				if (!nativeImpl) throw gcnew System::ObjectDisposedException("olcPixelGameEngineWithOwner");
 				return OnUserCreate();
 			}
 			bool CallOnUserUpdate(float fElapsedTime)
 			{
-				if (!m_Impl) throw gcnew System::ObjectDisposedException("olcPixelGameEngineWithOwner");
+				if (!nativeImpl) throw gcnew System::ObjectDisposedException("olcPixelGameEngineWithOwner");
 				return OnUserUpdate(fElapsedTime);
 			}
 			bool CallOnUserDestroy()
 			{
-				if (!m_Impl) throw gcnew System::ObjectDisposedException("olcPixelGameEngineWithOwner");
+				if (!nativeImpl) throw gcnew System::ObjectDisposedException("olcPixelGameEngineWithOwner");
 				return OnUserDestroy();
 			}
 		};
@@ -662,328 +986,516 @@ namespace olc {
 // Hardware
 		bool PixelGameEngineManaged::IsFocused()
 		{
-			return m_Impl->IsFocused();
+			return nativeImpl->IsFocused();
 		}
 		// Get the state of a specific keyboard button
 		HWButtonManaged^ PixelGameEngineManaged::GetKey(KeyManaged k)
 		{
-			return gcnew HWButtonManaged(&m_Impl->GetKey((Key)k));
+			return gcnew HWButtonManaged(&nativeImpl->GetKey((Key)k));
 		}
 		// Get the state of a specific mouse button
 		HWButtonManaged^ PixelGameEngineManaged::GetMouse(uint32_t b)
 		{
-			return gcnew HWButtonManaged(&m_Impl->GetMouse(b));
+			return gcnew HWButtonManaged(&nativeImpl->GetMouse(b));
 		}
 		// Get Mouse X coordinate in "pixel" space
 		int32_t PixelGameEngineManaged::GetMouseX()
 		{
-			return m_Impl->GetMouseX();
+			return nativeImpl->GetMouseX();
 		}
 		// Get Mouse Y coordinate in "pixel" space
 		int32_t PixelGameEngineManaged::GetMouseY()
 		{
-			return m_Impl->GetMouseY();
+			return nativeImpl->GetMouseY();
 		}
 		// Get Mouse Wheel Delta
 		int32_t PixelGameEngineManaged::GetMouseWheel()
 		{
-			return m_Impl->GetMouseWheel();
+			return nativeImpl->GetMouseWheel();
 		}
 		//// Get the mouse in window space
 		vi2dm^ PixelGameEngineManaged::GetWindowMouse()
 		{
-			return gcnew vi2dm(&m_Impl->GetWindowMouse());
+			return gcnew vi2dm(&nativeImpl->GetWindowMouse());
 		}
 		//// Gets the mouse as a vector to keep Tarriest happy
 		vi2dm^ PixelGameEngineManaged::GetMousePos()
 		{
-			return gcnew vi2dm(&m_Impl->GetMousePos());
+			return gcnew vi2dm(&nativeImpl->GetMousePos());
 		}
 		// Core methods
 
 		rcodeManaged PixelGameEngineManaged::Construct(int32_t screen_w, int32_t screen_h, int32_t pixel_w, int32_t pixel_h, bool full_screen, bool vsync, bool cohesion)
 		{
-			return (rcodeManaged)m_Impl->Construct(screen_w, screen_h, pixel_w, pixel_h, full_screen, vsync, cohesion);
+			return (rcodeManaged)nativeImpl->Construct(screen_w, screen_h, pixel_w, pixel_h, full_screen, vsync, cohesion);
 		}
 
 		rcodeManaged PixelGameEngineManaged::Construct(int32_t screen_w, int32_t screen_h, int32_t pixel_w, int32_t pixel_h, bool full_screen, bool vsync)
 		{
-			return (rcodeManaged)m_Impl->Construct(screen_w, screen_h, pixel_w, pixel_h, full_screen);
+			return (rcodeManaged)nativeImpl->Construct(screen_w, screen_h, pixel_w, pixel_h, full_screen);
 		}
 
 		rcodeManaged PixelGameEngineManaged::Construct(int32_t screen_w, int32_t screen_h, int32_t pixel_w, int32_t pixel_h, bool full_screen)
 		{
-			return (rcodeManaged)m_Impl->Construct(screen_w, screen_h, pixel_w, pixel_h, full_screen);
+			return (rcodeManaged)nativeImpl->Construct(screen_w, screen_h, pixel_w, pixel_h, full_screen);
 		}
 
 		rcodeManaged PixelGameEngineManaged::Construct(int32_t screen_w, int32_t screen_h, int32_t pixel_w, int32_t pixel_h)
 		{
-			return (rcodeManaged)m_Impl->Construct(screen_w, screen_h, pixel_w, pixel_h);
+			return (rcodeManaged)nativeImpl->Construct(screen_w, screen_h, pixel_w, pixel_h);
 		}
 
 		rcodeManaged PixelGameEngineManaged::Start()
 		{
-			return (rcodeManaged)m_Impl->Start();
+			return (rcodeManaged)nativeImpl->Start();
 		}
+
+
+		// Utilities
+
+		// Returns the width of the screen in "pixels"
+		int32_t PixelGameEngineManaged::ScreenWidth() {
+			return nativeImpl->ScreenWidth();
+		}
+
+		// Returns the height of the screen in "pixels"
+		int32_t PixelGameEngineManaged::ScreenHeight() {
+			return nativeImpl->ScreenHeight();
+		}
+
+		// Returns the width of the currently selected drawing target in "pixels"
+		int32_t PixelGameEngineManaged::GetDrawTargetWidth()
+		{
+			return nativeImpl->GetDrawTargetWidth();
+		}
+		// Returns the height of the currently selected drawing target in "pixels"
+		int32_t PixelGameEngineManaged::GetDrawTargetHeight()
+		{
+			return nativeImpl->GetDrawTargetHeight();
+		}
+		// Returns the currently active draw target
+		SpriteManaged^ PixelGameEngineManaged::GetDrawTarget()
+		{
+			return gcnew SpriteManaged(nativeImpl->GetDrawTarget());
+		}
+		// Resize the primary screen sprite
 		void PixelGameEngineManaged::SetScreenSize(int w, int h)
 		{
-			m_Impl->SetScreenSize(w, h);
+			nativeImpl->SetScreenSize(w, h);
+		}
+		// Specify which Sprite should be the target of drawing functions, use nullptr
+		// to specify the primary screen
+		void PixelGameEngineManaged::SetDrawTarget(SpriteManaged^ target)
+		{
+			nativeImpl->SetDrawTarget(target->GetImplementation());
+		}
+		// Gets the current Frames Per Second
+		uint32_t PixelGameEngineManaged::GetFPS()
+		{
+			return nativeImpl->GetFPS();
+		}
+		// Gets last update of elapsed time
+		float PixelGameEngineManaged::GetElapsedTime()
+		{
+			return nativeImpl->GetElapsedTime();
+		}
+		// Gets Actual Window size
+		vi2dm^ PixelGameEngineManaged::GetWindowSize()
+		{
+			return gcnew vi2dm(&nativeImpl->GetWindowSize());
+		}
+		// Gets pixel scale
+		vi2dm^ PixelGameEngineManaged::GetPixelSize()
+		{
+			return gcnew vi2dm(&nativeImpl->GetPixelSize());
+		}
+		// Gets actual pixel scale
+		vi2dm^ PixelGameEngineManaged::GetScreenPixelSize()
+		{
+			return gcnew vi2dm(&nativeImpl->GetScreenPixelSize());
 		}
 
-		int32_t PixelGameEngineManaged::ScreenWidth() {
-			return m_Impl->ScreenWidth();
+		// CONFIGURATION ROUTINES
+		// Layer targeting functions
+		void PixelGameEngineManaged::SetDrawTarget(uint8_t layer)
+		{
+			nativeImpl->SetDrawTarget(layer);
+		}
+		void PixelGameEngineManaged::EnableLayer(uint8_t layer, bool b)
+		{
+			nativeImpl->EnableLayer(layer, b);
+		}
+		void PixelGameEngineManaged::SetLayerOffset(uint8_t layer, vf2dm^ offset)
+		{
+			nativeImpl->SetLayerOffset(layer, *offset->GetImplementation());
+		}
+		void PixelGameEngineManaged::SetLayerOffset(uint8_t layer, float x, float y)
+		{
+			nativeImpl->SetLayerOffset(layer, x, y);
+		}
+		void PixelGameEngineManaged::SetLayerScale(uint8_t layer, vf2dm^ scale)
+		{
+			nativeImpl->SetLayerScale(layer, *scale->GetImplementation());
+		}
+		void PixelGameEngineManaged::SetLayerScale(uint8_t layer, float x, float y)
+		{
+			nativeImpl->SetLayerScale(layer, x, y);
+		}
+		void PixelGameEngineManaged::SetLayerTint(uint8_t layer, PixelManaged^ tint)
+		{
+			nativeImpl->SetLayerTint(layer, *tint->GetImplementation());
+		}
+		/*void PixelGameEngineManaged::SetLayerCustomRenderFunction(uint8_t layer, System::Action^)
+		{
+			nativeImpl->SetLayerOffset(layer, *offset->GetImplementation());
+		}*/
+
+		List<LayerDescManaged^>^ PixelGameEngineManaged::GetLayers()
+		{
+			// TODO: Make this generic util
+			auto native = nativeImpl->GetLayers();
+			auto result = gcnew List<LayerDescManaged^>(sizeof(native));
+			for (int i = 0; i < result->Capacity; ++i)
+			{
+				result[i] = gcnew LayerDescManaged(&native[i]);
+			}
+			return result;
+		}
+		uint32_t PixelGameEngineManaged::CreateLayer()
+		{
+			return nativeImpl->CreateLayer();
 		}
 
-		int32_t PixelGameEngineManaged::ScreenHeight() {
-			return m_Impl->ScreenHeight();
+		// Change the pixel mode for different optimisations
+		// olc::Pixel::NORMAL = No transparency
+		// olc::Pixel::MASK   = Transparent if alpha is < 255
+		// olc::Pixel::ALPHA  = Full transparency
+		void PixelGameEngineManaged::SetPixelMode(PixelManaged::Mode m)
+		{
+			nativeImpl->SetPixelMode((Pixel::Mode)m);
+		}
+		PixelManaged::Mode PixelGameEngineManaged::GetPixelMode()
+		{
+			return (PixelManaged::Mode)nativeImpl->GetPixelMode();
+		}
+		// Use a custom blend function
+		//void SetPixelMode(std::function<olc::Pixel(const int x, const int y, const olc::Pixel& pSource, const olc::Pixel& pDest)> pixelMode);
+		// Change the blend factor form between 0.0f to 1.0f;
+		void PixelGameEngineManaged::SetPixelBlend(float fBlend)
+		{
+			nativeImpl->SetPixelBlend(fBlend);
 		}
 
 		// DRAW
 
 		void PixelGameEngineManaged::Clear(PixelManaged^ p)
 		{
-			m_Impl->Clear(*p->GetImplementation());
+			nativeImpl->Clear(*p->GetImplementation());
 		}
 
 		bool PixelGameEngineManaged::Draw(vi2dm^ pos, PixelManaged^ p) {
-			return m_Impl->Draw(*pos->GetImplementation(), *p->GetImplementation());
+			return nativeImpl->Draw(*pos->GetImplementation(), *p->GetImplementation());
 		}
 		bool PixelGameEngineManaged::Draw(int x, int y, PixelManaged^ p) {
-			return m_Impl->Draw((int32_t)x, (int32_t)y, *p->GetImplementation());
+			return nativeImpl->Draw((int32_t)x, (int32_t)y, *p->GetImplementation());
 		}
 
 		void PixelGameEngineManaged::DrawString(int32_t x, int32_t y, System::String^ sText, PixelManaged^ col, uint32_t scale) {
-			return m_Impl->DrawString((int32_t)x, (int32_t)y, Util::MarshalString(sText), *col->GetImplementation(), scale);
+			return nativeImpl->DrawString((int32_t)x, (int32_t)y, Util::MarshalString(sText), *col->GetImplementation(), scale);
 		}
 		void PixelGameEngineManaged::DrawString(int32_t x, int32_t y, System::String^ sText, PixelManaged^ col) {
-			return m_Impl->DrawString((int32_t)x, (int32_t)y, Util::MarshalString(sText), *col->GetImplementation());
+			return nativeImpl->DrawString((int32_t)x, (int32_t)y, Util::MarshalString(sText), *col->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawString(int32_t x, int32_t y, System::String^ sText) {
-			return m_Impl->DrawString((int32_t)x, (int32_t)y, Util::MarshalString(sText));
+			return nativeImpl->DrawString((int32_t)x, (int32_t)y, Util::MarshalString(sText));
 		}
 
 		void PixelGameEngineManaged::DrawString(vi2dm^ pos, System::String^ sText, PixelManaged^ col, uint32_t scale) {
-			return m_Impl->DrawString(*pos->GetImplementation(), Util::MarshalString(sText), *col->GetImplementation(), scale);
+			return nativeImpl->DrawString(*pos->GetImplementation(), Util::MarshalString(sText), *col->GetImplementation(), scale);
 		}
 		void PixelGameEngineManaged::DrawString(vi2dm^ pos, System::String^ sText, PixelManaged^ col) {
-			return m_Impl->DrawString(*pos->GetImplementation(), Util::MarshalString(sText), *col->GetImplementation());
+			return nativeImpl->DrawString(*pos->GetImplementation(), Util::MarshalString(sText), *col->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawString(vi2dm^ pos, System::String^ sText) {
-			return m_Impl->DrawString(*pos->GetImplementation(), Util::MarshalString(sText));
+			return nativeImpl->DrawString(*pos->GetImplementation(), Util::MarshalString(sText));
 		}
 		vi2dm^ PixelGameEngineManaged::GetTextSize(System::String^ s) {
-			return gcnew vi2dm(&m_Impl->GetTextSize(Util::MarshalString(s)));
+			return gcnew vi2dm(&nativeImpl->GetTextSize(Util::MarshalString(s)));
 		}
 
 		void PixelGameEngineManaged::DrawSprite(int32_t x, int32_t y, SpriteManaged^ sprite, uint32_t scale, uint8_t flip)
 		{
-			m_Impl->DrawSprite(x, y, sprite->GetImplementation(), scale, flip);
+			nativeImpl->DrawSprite(x, y, sprite->GetImplementation(), scale, flip);
 		}
 		void PixelGameEngineManaged::DrawSprite(int32_t x, int32_t y, SpriteManaged^ sprite, uint32_t scale)
 		{
-			m_Impl->DrawSprite(x, y, sprite->GetImplementation(), scale);
+			nativeImpl->DrawSprite(x, y, sprite->GetImplementation(), scale);
 		}
 		void PixelGameEngineManaged::DrawSprite(int32_t x, int32_t y, SpriteManaged^ sprite)
 		{
-			m_Impl->DrawSprite(x, y, sprite->GetImplementation());
+			nativeImpl->DrawSprite(x, y, sprite->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawSprite(vi2dm^ pos, SpriteManaged^ sprite, uint32_t scale, uint8_t flip)
 		{
-			m_Impl->DrawSprite(*pos->GetImplementation(), sprite->GetImplementation(), scale, flip);
+			nativeImpl->DrawSprite(*pos->GetImplementation(), sprite->GetImplementation(), scale, flip);
 		}
 		void PixelGameEngineManaged::DrawSprite(vi2dm^ pos, SpriteManaged^ sprite, uint32_t scale)
 		{
-			m_Impl->DrawSprite(*pos->GetImplementation(), sprite->GetImplementation(), scale);
+			nativeImpl->DrawSprite(*pos->GetImplementation(), sprite->GetImplementation(), scale);
 		}
 		void PixelGameEngineManaged::DrawSprite(vi2dm^ pos, SpriteManaged^ sprite) {
-			m_Impl->DrawSprite(*pos->GetImplementation(), sprite->GetImplementation());
+			nativeImpl->DrawSprite(*pos->GetImplementation(), sprite->GetImplementation());
 		}
 
 		// Draws a rectangle at (x,y) to (x+w,y+h)
 		void PixelGameEngineManaged::DrawRect(int32_t x, int32_t y, int32_t w, int32_t h, PixelManaged^ p)
 		{
-			m_Impl->DrawRect(x, y, w, h, *p->GetImplementation());
+			nativeImpl->DrawRect(x, y, w, h, *p->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawRect(int32_t x, int32_t y, int32_t w, int32_t h) {
-			m_Impl->DrawRect(x, y, w, h);
+			nativeImpl->DrawRect(x, y, w, h);
 		}
 		void PixelGameEngineManaged::DrawRect(vi2dm^ pos, vi2dm^ size, PixelManaged^ p)
 		{
-			m_Impl->DrawRect(*pos->GetImplementation(), *size->GetImplementation(), *p->GetImplementation());
+			nativeImpl->DrawRect(*pos->GetImplementation(), *size->GetImplementation(), *p->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawRect(vi2dm^ pos, vi2dm^ size)
 		{
-			m_Impl->DrawRect(*pos->GetImplementation(), *size->GetImplementation());
+			nativeImpl->DrawRect(*pos->GetImplementation(), *size->GetImplementation());
 		}
 
 		// Fills a rectangle at (x,y) to (x+w,y+h)
 		void PixelGameEngineManaged::FillRect(int32_t x, int32_t y, int32_t w, int32_t h, PixelManaged^ p) {
-			m_Impl->FillRect(x, y, w, h, *p->GetImplementation());
+			nativeImpl->FillRect(x, y, w, h, *p->GetImplementation());
 		}
 		void PixelGameEngineManaged::FillRect(int32_t x, int32_t y, int32_t w, int32_t h) {
-			m_Impl->FillRect(x, y, w, h);
+			nativeImpl->FillRect(x, y, w, h);
 		}
 		void PixelGameEngineManaged::FillRect(vi2dm^ pos, vi2dm^ size, PixelManaged^ p) {
-			m_Impl->FillRect(*pos->GetImplementation(), *size->GetImplementation(), *p->GetImplementation());
+			nativeImpl->FillRect(*pos->GetImplementation(), *size->GetImplementation(), *p->GetImplementation());
 		}
 		void PixelGameEngineManaged::FillRect(vi2dm^ pos, vi2dm^ size) {
-			m_Impl->FillRect(*pos->GetImplementation(), *size->GetImplementation());
+			nativeImpl->FillRect(*pos->GetImplementation(), *size->GetImplementation());
 		}
+
+		// Draws a line from (x1,y1) to (x2,y2)
+		void PixelGameEngineManaged::DrawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2, PixelManaged^ p, uint32_t pattern)
+		{
+			nativeImpl->DrawLine(x1, y1, x2, y2, *p->GetImplementation(), pattern);
+		}
+		void PixelGameEngineManaged::DrawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2, PixelManaged^ p) {
+			nativeImpl->DrawLine(x1, y1, x2, y2, *p->GetImplementation());
+		}
+		void PixelGameEngineManaged::DrawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2) {
+			nativeImpl->DrawLine(x1, y1, x2, y2);
+		}
+		void PixelGameEngineManaged::DrawLine(vi2dm^ pos1, vi2dm^ pos2, PixelManaged^ p, uint32_t pattern) {
+			nativeImpl->DrawLine(*pos1->GetImplementation(), *pos2->GetImplementation(), *p->GetImplementation(), pattern);
+		}
+		void PixelGameEngineManaged::DrawLine(vi2dm^ pos1, vi2dm^ pos2, PixelManaged^ p) {
+			nativeImpl->DrawLine(*pos1->GetImplementation(), *pos2->GetImplementation(), *p->GetImplementation());
+		}
+		void PixelGameEngineManaged::DrawLine(vi2dm^ pos1, vi2dm^ pos2) {
+			nativeImpl->DrawLine(*pos1->GetImplementation(), *pos2->GetImplementation());
+		}
+		// Draws a circle located at (x,y) with radius
+		void PixelGameEngineManaged::DrawCircle(int32_t x, int32_t y, int32_t radius, PixelManaged^ p, uint8_t mask) {
+			nativeImpl->DrawCircle(x, y, radius, *p->GetImplementation(), mask);
+		}
+		void PixelGameEngineManaged::DrawCircle(int32_t x, int32_t y, int32_t radius, PixelManaged^ p) {
+			nativeImpl->DrawCircle(x, y, radius, *p->GetImplementation());
+		}
+		void PixelGameEngineManaged::DrawCircle(int32_t x, int32_t y, int32_t radius) {
+			nativeImpl->DrawCircle(x, y, radius);
+		}
+		void PixelGameEngineManaged::DrawCircle(vi2dm^ pos, int32_t radius, PixelManaged^ p, uint8_t mask) {
+			nativeImpl->DrawCircle(*pos->GetImplementation(), radius, *p->GetImplementation(), mask);
+		}
+		void PixelGameEngineManaged::DrawCircle(vi2dm^ pos, int32_t radius, PixelManaged^ p) {
+			nativeImpl->DrawCircle(*pos->GetImplementation(), radius, *p->GetImplementation());
+		}
+		void PixelGameEngineManaged::DrawCircle(vi2dm^ pos, int32_t radius) {
+			nativeImpl->DrawCircle(*pos->GetImplementation(), radius);
+		}
+		// Fills a circle located at (x,y) with radius
+		void PixelGameEngineManaged::FillCircle(int32_t x, int32_t y, int32_t radius, PixelManaged^ p) {
+			nativeImpl->FillCircle(x, y, radius, *p->GetImplementation());
+		}
+		void PixelGameEngineManaged::FillCircle(int32_t x, int32_t y, int32_t radius) {
+			nativeImpl->FillCircle(x, y, radius);
+		}
+		void PixelGameEngineManaged::FillCircle(vi2dm^ pos, int32_t radius, PixelManaged^ p) {
+			nativeImpl->DrawCircle(*pos->GetImplementation(), radius, *p->GetImplementation());
+		}
+		void PixelGameEngineManaged::FillCircle(vi2dm^ pos, int32_t radius) {
+			nativeImpl->DrawCircle(*pos->GetImplementation(), radius);
+		}
+
+		// Draws a triangle between points (x1,y1), (x2,y2) and (x3,y3)
+		void PixelGameEngineManaged::DrawTriangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int32_t y3, PixelManaged^ p) {}
+		void PixelGameEngineManaged::DrawTriangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int32_t y3) {}
+		void PixelGameEngineManaged::DrawTriangle(vi2dm^ pos1, vi2dm^ pos2, vi2dm^ pos3, PixelManaged^ p) {}
+		void PixelGameEngineManaged::DrawTriangle(vi2dm^ pos1, vi2dm^ pos2, vi2dm^ pos3) {}
+		// Flat fills a triangle between points (x1,y1), (x2,y2) and (x3,y3)
+		void PixelGameEngineManaged::FillTriangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int32_t y3, PixelManaged^ p) {}
+		void PixelGameEngineManaged::FillTriangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int32_t y3) {}
+		void PixelGameEngineManaged::FillTriangle(vi2dm^ pos1, vi2dm^ pos2, vi2dm^ pos3, PixelManaged^ p) {}
+		void PixelGameEngineManaged::FillTriangle(vi2dm^ pos1, vi2dm^ pos2, vi2dm^ pos3) {}
 
 		// ---------- Decals -----------
 		// Decal Quad functions
 		void PixelGameEngineManaged::SetDecalMode(DecalModeManaged mode)
 		{
-			m_Impl->SetDecalMode((DecalMode)mode);
+			nativeImpl->SetDecalMode((DecalMode)mode);
 		}
 		// Draws a whole decal, with optional scale and tinting
 		void PixelGameEngineManaged::DrawDecal(vf2dm^ pos, DecalManaged^ decal, vf2dm^ scale, PixelManaged^ tint)
 		{
-			m_Impl->DrawDecal(*pos->GetImplementation(), decal->GetImplementation(), *scale->GetImplementation(), *tint->GetImplementation());
+			nativeImpl->DrawDecal(*pos->GetImplementation(), decal->GetImplementation(), *scale->GetImplementation(), *tint->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawDecal(vf2dm^ pos, DecalManaged^ decal, vf2dm^ scale)
 		{
-			m_Impl->DrawDecal(*pos->GetImplementation(), decal->GetImplementation(), *scale->GetImplementation());
+			nativeImpl->DrawDecal(*pos->GetImplementation(), decal->GetImplementation(), *scale->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawDecal(vf2dm^ pos, DecalManaged^ decal)
 		{
-			m_Impl->DrawDecal(*pos->GetImplementation(), decal->GetImplementation());
+			nativeImpl->DrawDecal(*pos->GetImplementation(), decal->GetImplementation());
 		}
 		// Draws a region of a decal, with optional scale and tinting
 		void PixelGameEngineManaged::DrawPartialDecal(vf2dm^ pos, DecalManaged^ decal, vf2dm^ source_pos, vf2dm^ source_size, vf2dm^ scale, PixelManaged^ tint)
 		{
-			m_Impl->DrawPartialDecal(*pos->GetImplementation(), decal->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation(), *scale->GetImplementation(), *tint->GetImplementation());
+			nativeImpl->DrawPartialDecal(*pos->GetImplementation(), decal->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation(), *scale->GetImplementation(), *tint->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawPartialDecal(vf2dm^ pos, DecalManaged^ decal, vf2dm^ source_pos, vf2dm^ source_size, vf2dm^ scale)
 		{
-			m_Impl->DrawPartialDecal(*pos->GetImplementation(), decal->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation(), *scale->GetImplementation());
+			nativeImpl->DrawPartialDecal(*pos->GetImplementation(), decal->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation(), *scale->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawPartialDecal(vf2dm^ pos, DecalManaged^ decal, vf2dm^ source_pos, vf2dm^ source_size)
 		{
-			m_Impl->DrawPartialDecal(*pos->GetImplementation(), decal->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation());
+			nativeImpl->DrawPartialDecal(*pos->GetImplementation(), decal->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawPartialDecal(vf2dm^ pos, vf2dm^ size, DecalManaged^ decal, vf2dm^ source_pos, vf2dm^ source_size, PixelManaged^ tint)
 		{
-			m_Impl->DrawPartialDecal(*pos->GetImplementation(), *size->GetImplementation(), decal->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation(), *tint->GetImplementation());
+			nativeImpl->DrawPartialDecal(*pos->GetImplementation(), *size->GetImplementation(), decal->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation(), *tint->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawPartialDecal(vf2dm^ pos, vf2dm^ size, DecalManaged^ decal, vf2dm^ source_pos, vf2dm^ source_size)
 		{
-			m_Impl->DrawPartialDecal(*pos->GetImplementation(), *size->GetImplementation(), decal->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation());
+			nativeImpl->DrawPartialDecal(*pos->GetImplementation(), *size->GetImplementation(), decal->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation());
 		}
 		// Draws fully user controlled 4 vertices, pos(pixels), uv(pixels), colours
 		void PixelGameEngineManaged::DrawExplicitDecal(DecalManaged^ decal, vf2dm^ pos, vf2dm^ uv, PixelManaged^ col)
 		{
-			m_Impl->DrawExplicitDecal(decal->GetImplementation(), pos->GetImplementation(), uv->GetImplementation(), col->GetImplementation());
+			nativeImpl->DrawExplicitDecal(decal->GetImplementation(), pos->GetImplementation(), uv->GetImplementation(), col->GetImplementation());
 		}
 		// Draws a decal with 4 arbitrary points, warping the texture to look "correct"
 		void PixelGameEngineManaged::DrawWarpedDecal(DecalManaged^ decal, vf2dm^ pos, PixelManaged^ tint)
 		{
-			m_Impl->DrawWarpedDecal(decal->GetImplementation(), pos->GetImplementation(), *tint->GetImplementation());
+			nativeImpl->DrawWarpedDecal(decal->GetImplementation(), pos->GetImplementation(), *tint->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawWarpedDecal(DecalManaged^ decal, vf2dm^ pos)
 		{
-			m_Impl->DrawWarpedDecal(decal->GetImplementation(), pos->GetImplementation());
+			nativeImpl->DrawWarpedDecal(decal->GetImplementation(), pos->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawWarpedDecal(DecalManaged^ decal, List<vf2dm^>^ pos, PixelManaged^ tint)
 		{
 			// Language doesn't let me set this in a loop, no idea why....
 			const std::array<vf2d, 4> posNative = { *pos[0]->GetImplementation(), *pos[1]->GetImplementation(),*pos[2]->GetImplementation(),*pos[3]->GetImplementation() };
-			m_Impl->DrawWarpedDecal(decal->GetImplementation(), posNative, *tint->GetImplementation());
+			nativeImpl->DrawWarpedDecal(decal->GetImplementation(), posNative, *tint->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawWarpedDecal(DecalManaged^ decal, List<vf2dm^>^ pos)
 		{
 			// Language doesn't let me set this in a loop, no idea why....
 			const std::array<vf2d, 4> posNative = { *pos[0]->GetImplementation(), *pos[1]->GetImplementation(),*pos[2]->GetImplementation(),*pos[3]->GetImplementation() };
-			m_Impl->DrawWarpedDecal(decal->GetImplementation(), posNative);
+			nativeImpl->DrawWarpedDecal(decal->GetImplementation(), posNative);
 		}
 		// As above, but you can specify a region of a decal source sprite
 		void PixelGameEngineManaged::DrawPartialWarpedDecal(DecalManaged^ decal, vf2dm^ pos, vf2dm^ source_pos, vf2dm^ source_size, PixelManaged^ tint)
 		{
-			m_Impl->DrawPartialWarpedDecal(decal->GetImplementation(), pos->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation(), *tint->GetImplementation());
+			nativeImpl->DrawPartialWarpedDecal(decal->GetImplementation(), pos->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation(), *tint->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawPartialWarpedDecal(DecalManaged^ decal, vf2dm^ pos, vf2dm^ source_pos, vf2dm^ source_size)
 		{
-			m_Impl->DrawPartialWarpedDecal(decal->GetImplementation(), pos->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation());
+			nativeImpl->DrawPartialWarpedDecal(decal->GetImplementation(), pos->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawPartialWarpedDecal(DecalManaged^ decal, List<vf2dm^>^ pos, vf2dm^ source_pos, vf2dm^ source_size, PixelManaged^ tint)
 		{
 			// Language doesn't let me set this in a loop, no idea why....
 			const std::array<vf2d, 4> posNative = { *pos[0]->GetImplementation(), *pos[1]->GetImplementation(),*pos[2]->GetImplementation(),*pos[3]->GetImplementation() };
-			m_Impl->DrawPartialWarpedDecal(decal->GetImplementation(), posNative, *source_pos->GetImplementation(), *source_size->GetImplementation(), *tint->GetImplementation());
+			nativeImpl->DrawPartialWarpedDecal(decal->GetImplementation(), posNative, *source_pos->GetImplementation(), *source_size->GetImplementation(), *tint->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawPartialWarpedDecal(DecalManaged^ decal, List<vf2dm^>^ pos, vf2dm^ source_pos, vf2dm^ source_size)
 		{
 			// Language doesn't let me set this in a loop, no idea why....
 			const std::array<vf2d, 4> posNative = { *pos[0]->GetImplementation(), *pos[1]->GetImplementation(),*pos[2]->GetImplementation(),*pos[3]->GetImplementation() };
-			m_Impl->DrawPartialWarpedDecal(decal->GetImplementation(), posNative, *source_pos->GetImplementation(), *source_size->GetImplementation());
+			nativeImpl->DrawPartialWarpedDecal(decal->GetImplementation(), posNative, *source_pos->GetImplementation(), *source_size->GetImplementation());
 		}
 		// Draws a decal rotated to specified angle, wit point of rotation offset
 		void PixelGameEngineManaged::DrawRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle, vf2dm^ center, vf2dm^ scale, PixelManaged^ tint)
 		{
-			m_Impl->DrawRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle, *center->GetImplementation(), *scale->GetImplementation(), *tint->GetImplementation());
+			nativeImpl->DrawRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle, *center->GetImplementation(), *scale->GetImplementation(), *tint->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle, vf2dm^ center, vf2dm^ scale)
 		{
-			m_Impl->DrawRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle, *center->GetImplementation(), *scale->GetImplementation());
+			nativeImpl->DrawRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle, *center->GetImplementation(), *scale->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle, vf2dm^ center)
 		{
-			m_Impl->DrawRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle, *center->GetImplementation());
+			nativeImpl->DrawRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle, *center->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle)
 		{
-			m_Impl->DrawRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle);
+			nativeImpl->DrawRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle);
 		}
 		void PixelGameEngineManaged::DrawPartialRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle, vf2dm^ center, vf2dm^ source_pos, vf2dm^ source_size, vf2dm^ scale, PixelManaged^ tint)
 		{
-			m_Impl->DrawPartialRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle, *center->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation(), *scale->GetImplementation(), *tint->GetImplementation());
+			nativeImpl->DrawPartialRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle, *center->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation(), *scale->GetImplementation(), *tint->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawPartialRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle, vf2dm^ center, vf2dm^ source_pos, vf2dm^ source_size, vf2dm^ scale)
 		{
-			m_Impl->DrawPartialRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle, *center->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation(), *scale->GetImplementation());
+			nativeImpl->DrawPartialRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle, *center->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation(), *scale->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawPartialRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle, vf2dm^ center, vf2dm^ source_pos, vf2dm^ source_size)
 		{
-			m_Impl->DrawPartialRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle, *center->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation());
+			nativeImpl->DrawPartialRotatedDecal(*pos->GetImplementation(), decal->GetImplementation(), fAngle, *center->GetImplementation(), *source_pos->GetImplementation(), *source_size->GetImplementation());
 		}
 		// Draws a multiline string as a decal, with tiniting and scaling
 		void PixelGameEngineManaged::DrawStringDecal(vf2dm^ pos, System::String^ sText, PixelManaged^ col, vf2dm^ scale)
 		{
-			m_Impl->DrawStringDecal(*pos->GetImplementation(), Util::MarshalString(sText), *col->GetImplementation(), *scale->GetImplementation());
+			nativeImpl->DrawStringDecal(*pos->GetImplementation(), Util::MarshalString(sText), *col->GetImplementation(), *scale->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawStringDecal(vf2dm^ pos, System::String^ sText, PixelManaged^ col)
 		{
-			m_Impl->DrawStringDecal(*pos->GetImplementation(), Util::MarshalString(sText), *col->GetImplementation());
+			nativeImpl->DrawStringDecal(*pos->GetImplementation(), Util::MarshalString(sText), *col->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawStringDecal(vf2dm^ pos, System::String^ sText)
 		{
-			m_Impl->DrawStringDecal(*pos->GetImplementation(), Util::MarshalString(sText));
+			nativeImpl->DrawStringDecal(*pos->GetImplementation(), Util::MarshalString(sText));
 		}
 		void PixelGameEngineManaged::DrawStringPropDecal(vf2dm^ pos, System::String^ sText, PixelManaged^ col, vf2dm^ scale)
 		{
-			m_Impl->DrawStringPropDecal(*pos->GetImplementation(), Util::MarshalString(sText), *col->GetImplementation(), *scale->GetImplementation());
+			nativeImpl->DrawStringPropDecal(*pos->GetImplementation(), Util::MarshalString(sText), *col->GetImplementation(), *scale->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawStringPropDecal(vf2dm^ pos, System::String^ sText, PixelManaged^ col)
 		{
-			m_Impl->DrawStringPropDecal(*pos->GetImplementation(), Util::MarshalString(sText), *col->GetImplementation());
+			nativeImpl->DrawStringPropDecal(*pos->GetImplementation(), Util::MarshalString(sText), *col->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawStringPropDecal(vf2dm^ pos, System::String^ sText)
 		{
-			m_Impl->DrawStringPropDecal(*pos->GetImplementation(), Util::MarshalString(sText));
+			nativeImpl->DrawStringPropDecal(*pos->GetImplementation(), Util::MarshalString(sText));
 		}
 		// Draws a single shaded filled rectangle as a decal
 		void PixelGameEngineManaged::FillRectDecal(vf2dm^ pos, vf2dm^ size, PixelManaged^ col)
 		{
-			m_Impl->FillRectDecal(*pos->GetImplementation(), *size->GetImplementation(), *col->GetImplementation());
+			nativeImpl->FillRectDecal(*pos->GetImplementation(), *size->GetImplementation(), *col->GetImplementation());
 		}
 		void PixelGameEngineManaged::FillRectDecal(vf2dm^ pos, vf2dm^ size)
 		{
-			m_Impl->FillRectDecal(*pos->GetImplementation(), *size->GetImplementation());
+			nativeImpl->FillRectDecal(*pos->GetImplementation(), *size->GetImplementation());
 		}
 		// Draws a corner shaded rectangle as a decal
 		void PixelGameEngineManaged::GradientFillRectDecal(vf2dm^ pos, vf2dm^ size, PixelManaged^ colTL, PixelManaged^ colBL, PixelManaged^ colBR, PixelManaged^ colTR)
 		{
-			m_Impl->GradientFillRectDecal(*pos->GetImplementation(), *size->GetImplementation(), *colTL->GetImplementation(), *colBL->GetImplementation(), *colBR->GetImplementation(), *colTR->GetImplementation());
+			nativeImpl->GradientFillRectDecal(*pos->GetImplementation(), *size->GetImplementation(), *colTL->GetImplementation(), *colBL->GetImplementation(), *colBR->GetImplementation(), *colTR->GetImplementation());
 		}
 
 
