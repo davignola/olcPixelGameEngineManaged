@@ -11,13 +11,14 @@ This is still a long process since everything has to be wrapped
 
 # Disclaimer
 I am a complete C++ noob ! 
-The code is currently ugly, disorganised and I may have done some horrible things to the eyes of some !
+I'm learning C++ quirks along with the .net framework interoperability layer quirks... There is much to improve.
+Pretty much all functionnalities are currently supported, but the code is currently ugly, disorganised and I may have done some horrible things to the eyes of some !
 
 Sadly this is Windows only as C++/CLI is not supported on other platforms.
 
 I made this for fun as a learning experiement to see if it could be done and how performance is affected compared to the original.
 
-But it works enough to support a C# implementation of olcNES (part 1)
+But it works enough to fully support a C# implementation of olcNES
 See : https://github.com/davignola/olcNESharp
 
 Big thanks to OneLoneCoder for the original sources, this is a ton of fun to explore.
