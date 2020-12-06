@@ -8,12 +8,25 @@ namespace Example
 {
     public class ManagedDemo : PixelGameEngineManaged
     {
+
+        private SpriteManaged test2;
+
         public override bool OnUserCreate()
         {
             // Called once at the start, so create things here
             olcPGEXSoundManaged.InitialiseAudio();
 
-            var test  = new vf2dm(2f,2f);
+            var test = new vf2dm(2f, 2f);
+
+            test2 = new SpriteManaged(10, 20);
+            SetDrawTarget(test2);
+
+            DrawLine(0, 5, 10, 5, PixelColor.BLUE);
+
+
+            SetDrawTarget(0);
+
+            var test4 = GetLayers();
 
             return true;
         }
@@ -28,6 +41,9 @@ namespace Example
 
             DrawString(3, 10, "HELLO WORLD!", PixelColor.BLACK);
 
+
+            DrawSprite(0, 0, test2);
+
             if (GetKey(KeyManaged.A).bHeld)
             {
                 DrawString(3, 20, "A Held", PixelColor.BLACK);
@@ -37,6 +53,14 @@ namespace Example
             {
                 DrawString(3, 30, "Q Pressed", PixelColor.BLACK);
             }
+
+            if (GetKey(KeyManaged.S).bPressed)
+            {
+                SpriteUtilitiesManaged.SwitchAxis(test2);
+            }
+
+
+
 
             return true;
         }

@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="olcPGEXSoundManaged.h" />
+    <ClInclude Include="PGEXUtilitiesManaged.h" />
     <ClInclude Include="PixelGameEngineManaged.h" />
   </ItemGroup>
   <ItemGroup>

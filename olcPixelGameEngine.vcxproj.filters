@@ -12,6 +12,7 @@
     <ClInclude Include="Extensions\olcPGEX_Sound.h" />
     <ClInclude Include="Extensions\Managed\Wrapper\olcPGEX_SoundWrapper.h" />
     <ClInclude Include="olcPixelGameEngine.h" />
+    <ClInclude Include="Extensions\PGEX_Utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

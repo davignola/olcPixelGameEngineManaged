@@ -25,6 +25,7 @@
     <ClInclude Include="Extensions\olcPGEX_RayCastWorld.h" />
     <ClInclude Include="Extensions\olcPGEX_Sound.h" />
     <ClInclude Include="Extensions\Managed\Wrapper\olcPGEX_SoundWrapper.h" />
+    <ClInclude Include="Extensions\PGEX_Utilities.h" />
     <ClInclude Include="olcPixelGameEngine.h" />
   </ItemGroup>
   <ItemGroup>

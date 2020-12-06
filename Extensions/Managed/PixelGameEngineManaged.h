@@ -78,44 +78,54 @@ namespace olc {
 		public ref struct v2d_genericManaged
 		{
 		private:
-			const v2d_generic<T>* m_Impl;
+			v2d_generic<T>* nativeImpl;
 		public:
-			v2d_genericManaged() : m_Impl(new v2d_generic<T>())
-			{
-				x = m_Impl->x;
-				y = m_Impl->y;
-			}
-			v2d_genericManaged(v2d_generic<T>* _impl)
-			{
-				m_Impl = _impl;
-				x = _impl->x;
-				y = _impl->y;
-			}
-			v2d_genericManaged(const v2d_generic<T>* _impl)
-			{
-				m_Impl = _impl;
-				x = _impl->x;
-				y = _impl->y;
-			}
-			v2d_genericManaged(T _x, T _y)
-			{
-				m_Impl = new v2d_generic<T>(_x, _y);
-				x = m_Impl->x;
-				y = m_Impl->y;
-			}
-			~v2d_genericManaged() { this->!v2d_genericManaged(); }
+			v2d_genericManaged() : nativeImpl(new v2d_generic<T>()) {}
+			v2d_genericManaged(v2d_generic<T>* _impl) { nativeImpl = _impl; }
+			v2d_genericManaged(T _x, T _y) { nativeImpl = new v2d_generic<T>(_x, _y); }
 
-			!v2d_genericManaged() {
-				if (m_Impl) {
-					delete m_Impl;
-					m_Impl = 0;
-				}
+			property T X
+			{
+			public: T get() { return nativeImpl->x; }
+			public: void set(T value)
+			{
+				nativeImpl->x = value;
+			}
 			}
 
-			T x;
-			T y;
+			property T Y
+			{
+			public: T get() { return nativeImpl->y; }
+			public: void set(T value)
+			{
+				nativeImpl->y = value;
+			}
+			}
 
-			const v2d_generic<T>* GetImplementation() { return m_Impl; }
+			v2d_generic<T>* GetImplementation() { return nativeImpl; }
+
+		};
+		template <class T>
+		public ref struct v2d_genericConstManaged
+		{
+		private:
+			const v2d_generic<T>* nativeImpl;
+		public:
+			v2d_genericConstManaged() : nativeImpl(new v2d_generic<T>()) {}
+			v2d_genericConstManaged(const v2d_generic<T>* _impl) { nativeImpl = _impl; }
+			v2d_genericConstManaged(T _x, T _y) { nativeImpl = new v2d_generic<T>(_x, _y); }
+
+			property T X
+			{
+			public: T get() { return nativeImpl->x; }
+			}
+
+			property T Y
+			{
+			public: T get() { return nativeImpl->y; }
+			}
+
+			const v2d_generic<T>* GetImplementation() { return nativeImpl; }
 
 		};
 
@@ -125,7 +135,6 @@ namespace olc {
 		public:
 			vi2dm() : v2d_genericManaged() {};
 			vi2dm(v2d_generic<int32_t>* _impl) : v2d_genericManaged(_impl) {};
-			vi2dm(const v2d_generic<int32_t>* _impl) : v2d_genericManaged(_impl) {};
 			vi2dm(int32_t _x, int32_t _y) : v2d_genericManaged(_x, _y) {};
 		};
 		public ref class vu2dm : v2d_genericManaged<uint32_t>
@@ -133,7 +142,6 @@ namespace olc {
 		public:
 			vu2dm() : v2d_genericManaged() {};
 			vu2dm(v2d_generic<uint32_t>* _impl) : v2d_genericManaged(_impl) {};
-			vu2dm(const v2d_generic<uint32_t>* _impl) : v2d_genericManaged(_impl) {};
 			vu2dm(uint32_t _x, uint32_t _y) : v2d_genericManaged(_x, _y) {};
 		};
 		public ref class vf2dm : v2d_genericManaged<float>
@@ -141,7 +149,6 @@ namespace olc {
 		public:
 			vf2dm() : v2d_genericManaged() {};
 			vf2dm(v2d_generic<float>* _impl) : v2d_genericManaged(_impl) {};
-			vf2dm(const v2d_generic<float>* _impl) : v2d_genericManaged(_impl) {};
 			vf2dm(float _x, float _y) : v2d_genericManaged(_x, _y) {};
 		};
 		public ref class vd2dm : v2d_genericManaged<double>
@@ -149,8 +156,36 @@ namespace olc {
 		public:
 			vd2dm() : v2d_genericManaged() {};
 			vd2dm(v2d_generic<double>* _impl) : v2d_genericManaged(_impl) {};
-			vd2dm(const v2d_generic<double>* _impl) : v2d_genericManaged(_impl) {};
 			vd2dm(double _x, double _y) : v2d_genericManaged(_x, _y) {};
+		};
+		// Const version
+		public ref class vi2dcm : v2d_genericConstManaged<int32_t>
+		{
+		public:
+			vi2dcm() : v2d_genericConstManaged() {};
+			vi2dcm(const v2d_generic<int32_t>* _impl) : v2d_genericConstManaged(_impl) {};
+			vi2dcm(int32_t _x, int32_t _y) : v2d_genericConstManaged(_x, _y) {};
+		};
+		public ref class vu2dcm : v2d_genericConstManaged<uint32_t>
+		{
+		public:
+			vu2dcm() : v2d_genericConstManaged() {};
+			vu2dcm(const v2d_generic<uint32_t>* _impl) : v2d_genericConstManaged(_impl) {};
+			vu2dcm(uint32_t _x, uint32_t _y) : v2d_genericConstManaged(_x, _y) {};
+		};
+		public ref class vf2dcm : v2d_genericConstManaged<float>
+		{
+		public:
+			vf2dcm() : v2d_genericConstManaged() {};
+			vf2dcm(const v2d_generic<float>* _impl) : v2d_genericConstManaged(_impl) {};
+			vf2dcm(float _x, float _y) : v2d_genericConstManaged(_x, _y) {};
+		};
+		public ref class vd2dcm : v2d_genericConstManaged<double>
+		{
+		public:
+			vd2dcm() : v2d_genericConstManaged() {};
+			vd2dcm(const v2d_generic<double>* _impl) : v2d_genericConstManaged(_impl) {};
+			vd2dcm(double _x, double _y) : v2d_genericConstManaged(_x, _y) {};
 		};
 
 
@@ -159,26 +194,65 @@ namespace olc {
 		/// </summary>
 		public ref struct PixelManaged {
 		private:
-			Pixel* m_Impl;
+			Pixel* nativeImpl;
 
 		public:
 
 			enum class Mode { NORMAL, MASK, ALPHA, CUSTOM };
 
-			PixelManaged() { m_Impl = new Pixel(); }
-			PixelManaged(uint8_t red, uint8_t green, uint8_t blue) { m_Impl = new Pixel(red, green, blue); }
-			PixelManaged(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) { m_Impl = new Pixel(red, green, blue, alpha); }
-			PixelManaged(uint32_t p) { m_Impl = new Pixel(p); }
-			PixelManaged(Pixel* _impl) { m_Impl = _impl; }
-			~PixelManaged() { this->!PixelManaged(); }
-			!PixelManaged() {
-				if (m_Impl) {
-					delete m_Impl;
-					m_Impl = 0;
-				}
+			PixelManaged() { nativeImpl = new Pixel(); }
+			PixelManaged(uint8_t red, uint8_t green, uint8_t blue) { nativeImpl = new Pixel(red, green, blue); }
+			PixelManaged(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) { nativeImpl = new Pixel(red, green, blue, alpha); }
+			PixelManaged(uint32_t p) { nativeImpl = new Pixel(p); }
+			PixelManaged(Pixel* _impl) { nativeImpl = _impl; }
+
+
+			property uint32_t N
+			{
+			public: uint32_t get() { return nativeImpl->n; }
+			public: void set(uint32_t value)
+			{
+				nativeImpl->n = value;
+			}
 			}
 
-			Pixel* GetImplementation() { return m_Impl; }
+			property uint8_t R
+			{
+			public: uint8_t get() { return nativeImpl->r; }
+			public: void set(uint8_t value)
+			{
+				nativeImpl->r = value;
+			}
+			}
+
+			property uint8_t G
+			{
+			public: uint8_t get() { return nativeImpl->g; }
+			public: void set(uint8_t value)
+			{
+				nativeImpl->g = value;
+			}
+			}
+
+			property uint8_t B
+			{
+			public: uint8_t get() { return nativeImpl->b; }
+			public: void set(uint8_t value)
+			{
+				nativeImpl->b = value;
+			}
+			}
+
+			property uint8_t A
+			{
+			public: uint8_t get() { return nativeImpl->a; }
+			public: void set(uint8_t value)
+			{
+				nativeImpl->a = value;
+			}
+			}
+
+			Pixel* GetImplementation() { return nativeImpl; }
 
 		};
 
@@ -188,19 +262,13 @@ namespace olc {
 		/// </summary>
 		public ref struct ResourcePackManaged {
 		private:
-			ResourcePack* m_Impl;
+			ResourcePack* nativeImpl;
 
 		public:
 
 		public:
-			ResourcePackManaged() { m_Impl = new ResourcePack(); }
-			~ResourcePackManaged() { this->!ResourcePackManaged(); }
-			!ResourcePackManaged() {
-				if (m_Impl) {
-					delete m_Impl;
-					m_Impl = 0;
-				}
-			}
+			ResourcePackManaged() { nativeImpl = new ResourcePack(); }
+
 			bool AddFile(System::String^ sFile);
 			bool LoadPack(System::String^ sFile, System::String^ sKey);
 			bool SavePack(System::String^ sFile, System::String^ sKey);
@@ -208,7 +276,7 @@ namespace olc {
 			bool Loaded();
 
 		public:
-			ResourcePack* GetImplementation() { return m_Impl; }
+			ResourcePack* GetImplementation() { return nativeImpl; }
 
 		};
 
@@ -217,21 +285,15 @@ namespace olc {
 		/// </summary>
 		public ref struct SpriteManaged {
 		private:
-			Sprite* m_Impl;
+			Sprite* nativeImpl;
 
 		public:
-			SpriteManaged() { m_Impl = new Sprite(); }
-			SpriteManaged(System::String^ sImageFile, ResourcePackManaged^ pack) { m_Impl = new Sprite(Util::MarshalString(sImageFile), pack->GetImplementation()); }
-			SpriteManaged(System::String^ sImageFile) { m_Impl = new Sprite(Util::MarshalString(sImageFile)); }
-			SpriteManaged(int32_t w, int32_t h) { m_Impl = new Sprite(w, h); }
-			SpriteManaged(Sprite* _impl) { m_Impl = _impl; }
-			~SpriteManaged() { this->!SpriteManaged(); }
-			!SpriteManaged() {
-				if (m_Impl) {
-					delete m_Impl;
-					m_Impl = 0;
-				}
-			}
+			SpriteManaged() { nativeImpl = new Sprite(); }
+			SpriteManaged(System::String^ sImageFile, ResourcePackManaged^ pack) { nativeImpl = new Sprite(Util::MarshalString(sImageFile), pack->GetImplementation()); }
+			SpriteManaged(System::String^ sImageFile) { nativeImpl = new Sprite(Util::MarshalString(sImageFile)); }
+			SpriteManaged(int32_t w, int32_t h) { nativeImpl = new Sprite(w, h); }
+			SpriteManaged(Sprite* _impl) { nativeImpl = _impl; }
+
 
 		public:
 			rcodeManaged LoadFromFile(System::String^ sImageFile, ResourcePackManaged^ pack);
@@ -241,8 +303,24 @@ namespace olc {
 			rcodeManaged SaveToPGESprFile(System::String^ sImageFile);
 
 		public:
-			int32_t width();
-			int32_t height();
+
+			property int32_t Width
+			{
+			public: int32_t get() { return nativeImpl->width; }
+			public: void set(int32_t value)
+			{
+				nativeImpl->width = value;
+			}
+			}
+			property int32_t Height
+			{
+			public: int32_t get() { return nativeImpl->height; }
+			public: void set(int32_t value)
+			{
+				nativeImpl->height = value;
+			}
+			}
+
 			enum class ModeManaged : byte { NORMAL, PERIODIC };
 			enum class FlipManaged : byte { NONE = 0, HORIZ = 1, VERT = 2 };
 
@@ -264,20 +342,20 @@ namespace olc {
 
 			//static std::unique_ptr<olc::ImageLoader> loader;
 
-			Sprite* GetImplementation() { return m_Impl; }
+			Sprite* GetImplementation() { return nativeImpl; }
 
 		};
 
 		public ref struct HWButtonManaged
 		{
 		private:
-			HWButton* m_Impl;
+			HWButton* nativeImpl;
 
 		public:
-			HWButtonManaged() { m_Impl = new HWButton(); }
+			HWButtonManaged() { nativeImpl = new HWButton(); }
 			HWButtonManaged(HWButton* _impl)
 			{
-				m_Impl = _impl;
+				nativeImpl = _impl;
 				bPressed = _impl->bPressed;
 				bReleased = _impl->bReleased;
 				bHeld = _impl->bHeld;
@@ -287,7 +365,7 @@ namespace olc {
 			bool bReleased = false;		// Set once during the frame the event occurs
 			bool bHeld = false;			// Set true for all frames between pressed and released events
 
-			HWButton* GetImplementation() { return m_Impl; }
+			HWButton* GetImplementation() { return nativeImpl; }
 		};
 
 
@@ -295,17 +373,21 @@ namespace olc {
 		public ref class DecalManaged
 		{
 		private:
-			Decal* m_Impl;
+			Decal* nativeImpl;
 
 		public:
-			DecalManaged(SpriteManaged^ spr, bool filter) { m_Impl = new Decal(spr->GetImplementation(), filter); }
-			DecalManaged(SpriteManaged^ spr) { m_Impl = new Decal(spr->GetImplementation()); }
-			DecalManaged(Decal* impl) { m_Impl = impl; }
+			DecalManaged(SpriteManaged^ spr, bool filter) { nativeImpl = new Decal(spr->GetImplementation(), filter); }
+			DecalManaged(SpriteManaged^ spr) { nativeImpl = new Decal(spr->GetImplementation()); }
+			DecalManaged(Decal* impl) { nativeImpl = impl; }
 
 
 			void Update();
 
-			Decal* GetImplementation() { return m_Impl; }
+			property SpriteManaged^ Sprite {
+		public: SpriteManaged^ get() { return gcnew SpriteManaged(nativeImpl->sprite); }
+			}
+
+			Decal* GetImplementation() { return nativeImpl; }
 		};
 
 		public enum class DecalModeManaged
@@ -321,7 +403,7 @@ namespace olc {
 		public ref struct DecalInstanceManaged
 		{
 		private:
-			DecalInstance* m_Impl;
+			DecalInstance* nativeImpl;
 
 			DecalManaged^ decal;
 			array<vf2dm^>^ pos;
@@ -333,15 +415,15 @@ namespace olc {
 		public:
 			DecalInstanceManaged()
 			{
-				m_Impl = new DecalInstance();
+				nativeImpl = new DecalInstance();
 				CopyFromNative();
 			}
 			DecalInstanceManaged(DecalInstance* impl)
 			{
-				m_Impl = impl;
+				nativeImpl = impl;
 				CopyFromNative();
 			}
-			DecalInstance* GetImplementation() { return m_Impl; }
+			DecalInstance* GetImplementation() { return nativeImpl; }
 
 			void CopyFromNative()
 			{
@@ -350,89 +432,95 @@ namespace olc {
 				if (w == nullptr) { w = gcnew array<float>(4); }
 				if (tint == nullptr) { tint = gcnew array<PixelManaged^>(4); }
 
-				decal = gcnew DecalManaged(m_Impl->decal);
+				decal = gcnew DecalManaged(nativeImpl->decal);
 				for (int i = 0; i < 4; ++i)
 				{
-					pos[i] = gcnew vf2dm((&m_Impl->pos)[i]);
-					uv[i] = gcnew vf2dm((&m_Impl->uv)[i]);
-					w[i] = *(&m_Impl->w)[i];
-					tint[i] = gcnew PixelManaged((&m_Impl->tint)[i]);
+					pos[i] = gcnew vf2dm((&nativeImpl->pos)[i]);
+					uv[i] = gcnew vf2dm((&nativeImpl->uv)[i]);
+					w[i] = *(&nativeImpl->w)[i];
+					tint[i] = gcnew PixelManaged((&nativeImpl->tint)[i]);
 				}
-				mode = (DecalModeManaged)m_Impl->mode;
+				mode = (DecalModeManaged)nativeImpl->mode;
 			}
 
-			property DecalManaged^ Decal {
-		public: DecalManaged^ get() { return decal; }
-		public: void set(DecalManaged^ value)
-		{
-			decal = value;
-			m_Impl->decal = value->GetImplementation();
-		}
-			}
-
-			property array<vf2dm^>^ Pos {
-		public: array<vf2dm^>^ get() { return pos; }
-		public: void set(array<vf2dm^>^ value)
-		{
-			pos = value;
-			auto refArray = &m_Impl->pos;
-
-			for (int i = 0; i < sizeof(refArray); ++i)
+			property DecalManaged^ Decal
 			{
-				*refArray[i] = *value[i]->GetImplementation();
-			}
-		}
-			}
-
-			property array<vf2dm^>^ Uv {
-		public: array<vf2dm^>^ get() { return uv; }
-		public: void set(array<vf2dm^>^ value)
-		{
-			uv = value;
-			auto refArray = &m_Impl->uv;
-
-			for (int i = 0; i < sizeof(refArray); ++i)
+			public: DecalManaged^ get() { return decal; }
+			public: void set(DecalManaged^ value)
 			{
-				*refArray[i] = *value[i]->GetImplementation();
+				decal = value;
+				nativeImpl->decal = value->GetImplementation();
 			}
-		}
 			}
 
-			property array<float>^ W {
-		public: array<float>^ get() { return w; }
-		public: void set(array<float>^ value)
-		{
-			w = value;
-			auto refArray = &m_Impl->w;
-
-			for (int i = 0; i < sizeof(refArray); ++i)
+			property array<vf2dm^>^ Pos
 			{
-				*refArray[i] = value[i];
-			}
-		}
-			}
-
-			property array<PixelManaged^>^ Tint {
-		public: array<PixelManaged^>^ get() { return tint; }
-		public: void set(array<PixelManaged^>^ value)
-		{
-			tint = value;
-			auto refArray = &m_Impl->tint;
-
-			for (int i = 0; i < sizeof(refArray); ++i)
+			public: array<vf2dm^>^ get() { return pos; }
+			public: void set(array<vf2dm^>^ value)
 			{
-				*refArray[i] = *value[i]->GetImplementation();
+				pos = value;
+				auto refArray = &nativeImpl->pos;
+
+				for (int i = 0; i < sizeof(refArray); ++i)
+				{
+					*refArray[i] = *value[i]->GetImplementation();
+				}
 			}
-		}
 			}
 
-			property DecalModeManaged Mode {
-		public: DecalModeManaged get() { return mode; }
-		public: void set(DecalModeManaged value)
-		{
-			mode = value;
-			m_Impl->mode = (DecalMode)value;
-		}
+			property array<vf2dm^>^ Uv
+			{
+			public: array<vf2dm^>^ get() { return uv; }
+			public: void set(array<vf2dm^>^ value)
+			{
+				uv = value;
+				auto refArray = &nativeImpl->uv;
+
+				for (int i = 0; i < sizeof(refArray); ++i)
+				{
+					*refArray[i] = *value[i]->GetImplementation();
+				}
+			}
+			}
+
+			property array<float>^ W
+			{
+			public: array<float>^ get() { return w; }
+			public: void set(array<float>^ value)
+			{
+				w = value;
+				auto refArray = &nativeImpl->w;
+
+				for (int i = 0; i < sizeof(refArray); ++i)
+				{
+					*refArray[i] = value[i];
+				}
+			}
+			}
+
+			property array<PixelManaged^>^ Tint
+			{
+			public: array<PixelManaged^>^ get() { return tint; }
+			public: void set(array<PixelManaged^>^ value)
+			{
+				tint = value;
+				auto refArray = &nativeImpl->tint;
+
+				for (int i = 0; i < sizeof(refArray); ++i)
+				{
+					*refArray[i] = *value[i]->GetImplementation();
+				}
+			}
+			}
+
+			property DecalModeManaged Mode
+			{
+			public: DecalModeManaged get() { return mode; }
+			public: void set(DecalModeManaged value)
+			{
+				mode = value;
+				nativeImpl->mode = (DecalMode)value;
+			}
 			}
 		};
 
@@ -440,12 +528,10 @@ namespace olc {
 		public ref struct LayerDescManaged
 		{
 		private:
-			LayerDesc* m_Impl;
+			LayerDesc* nativeImpl;
 
 			vf2dm^ vOffset;
 			vf2dm^ vScale;
-			bool bShow = false;
-			bool bUpdate = false;
 			SpriteManaged^ pDrawTarget;
 			uint32_t nResID;
 			List<DecalInstanceManaged^>^ vecDecalInstance;
@@ -455,110 +541,114 @@ namespace olc {
 		public:
 			LayerDescManaged()
 			{
-				m_Impl = new LayerDesc();
+				nativeImpl = new LayerDesc();
 				CopyFromNative();
 			}
 			LayerDescManaged(LayerDesc* impl)
 			{
-				m_Impl = impl;
+				nativeImpl = impl;
 				CopyFromNative();
 			}
-			LayerDesc* GetImplementation() { return m_Impl; }
+			LayerDesc* GetImplementation() { return nativeImpl; }
 
 			void CopyFromNative()
 			{
 				if (vecDecalInstance == nullptr) { vecDecalInstance = gcnew List<DecalInstanceManaged^>(); }
 
-				vOffset = gcnew vf2dm(&m_Impl->vOffset);
-				vScale = gcnew vf2dm(&m_Impl->vScale);
-				bShow = bShow;
-				bUpdate = bUpdate;
-				pDrawTarget = gcnew SpriteManaged(m_Impl->pDrawTarget);
+				vOffset = gcnew vf2dm(&nativeImpl->vOffset);
+				vScale = gcnew vf2dm(&nativeImpl->vScale);
+				pDrawTarget = gcnew SpriteManaged(nativeImpl->pDrawTarget);
 				nResID = nResID;
-				tint = gcnew PixelManaged(&m_Impl->tint);
+				tint = gcnew PixelManaged(&nativeImpl->tint);
 				vecDecalInstance->Clear();
-				for (int i = 0; i < 4; ++i)
+				for (int i = 0; i < nativeImpl->vecDecalInstance.size(); ++i)
 				{
-					vecDecalInstance->Add(gcnew DecalInstanceManaged(&(&m_Impl->vecDecalInstance)->at(i)));
+					vecDecalInstance->Add(gcnew DecalInstanceManaged(&nativeImpl->vecDecalInstance.at(i)));
 				}
 			}
 
-			property vf2dm^ Offset {
-		public: vf2dm^ get() { return vOffset; }
-		public: void set(vf2dm^ value)
-		{
-			vOffset = value;
-			m_Impl->vOffset = *value->GetImplementation();
-		}
-			}
-
-
-			property vf2dm^ Scale {
-		public: vf2dm^ get() { return vScale; }
-		public: void set(vf2dm^ value)
-		{
-			vScale = value;
-			m_Impl->vScale = *value->GetImplementation();
-		}
-			}
-
-			property bool Show {
-		public: bool get() { return bShow; }
-		public: void set(bool value)
-		{
-			bShow = value;
-			m_Impl->bShow = value;
-		}
-			}
-
-			property bool Update {
-		public: bool get() { return bUpdate; }
-		public: void set(bool value)
-		{
-			bUpdate = value;
-			m_Impl->bUpdate = value;
-		}
-			}
-
-			property SpriteManaged^ DrawTarget {
-		public: SpriteManaged^ get() { return pDrawTarget; }
-		public: void set(SpriteManaged^ value)
-		{
-			pDrawTarget = value;
-			m_Impl->pDrawTarget = value->GetImplementation();
-		}
-			}
-
-			property uint32_t ResID {
-		public: uint32_t get() { return nResID; }
-		public: void set(uint32_t value)
-		{
-			nResID = value;
-			m_Impl->nResID = value;
-		}
-			}
-
-			property List<DecalInstanceManaged^>^ DecalInstance {
-		public: List<DecalInstanceManaged^>^ get() { return vecDecalInstance; }
-		public: void set(List<DecalInstanceManaged^>^ value)
-		{
-			vecDecalInstance = value;
-			auto refArray = &m_Impl->vecDecalInstance;
-
-			for (int i = 0; i < sizeof(refArray); ++i)
+			property vf2dm^ Offset
 			{
-				refArray->at(i) = *value[i]->GetImplementation();
+			public: vf2dm^ get() { return vOffset; }
+			public: void set(vf2dm^ value)
+			{
+				vOffset = value;
+				nativeImpl->vOffset = *value->GetImplementation();
 			}
-		}
 			}
 
-			property PixelManaged^ Tint {
-		public: PixelManaged^ get() { return tint; }
-		public: void set(PixelManaged^ value)
-		{
-			tint = value;
-			m_Impl->tint = *value->GetImplementation();
-		}
+
+			property vf2dm^ Scale
+			{
+			public: vf2dm^ get() { return vScale; }
+			public: void set(vf2dm^ value)
+			{
+				vScale = value;
+				nativeImpl->vScale = *value->GetImplementation();
+			}
+			}
+
+			property bool Show
+			{
+			public: bool get() { return nativeImpl->bShow; }
+			public: void set(bool value)
+			{
+				nativeImpl->bShow = value;
+			}
+			}
+
+			property bool Update
+			{
+			public: bool get() { return nativeImpl->bUpdate; }
+			public: void set(bool value)
+			{
+				nativeImpl->bUpdate = value;
+			}
+			}
+
+			property SpriteManaged^ DrawTarget
+			{
+			public: SpriteManaged^ get() { return pDrawTarget; }
+			public: void set(SpriteManaged^ value)
+			{
+				pDrawTarget = value;
+				nativeImpl->pDrawTarget = value->GetImplementation();
+			}
+			}
+
+			property uint32_t ResID
+			{
+			public: uint32_t get() { return nResID; }
+			public: void set(uint32_t value)
+			{
+				nResID = value;
+				nativeImpl->nResID = value;
+			}
+			}
+
+			property List<DecalInstanceManaged^>^ DecalInstance
+			{
+			public: List<DecalInstanceManaged^>^ get() { return vecDecalInstance; }
+			public: void set(List<DecalInstanceManaged^>^ value)
+			{
+				vecDecalInstance = value;
+				auto refArray = &nativeImpl->vecDecalInstance;
+
+				for (int i = 0; i < sizeof(refArray); ++i)
+				{
+					refArray->at(i) = *value[i]->GetImplementation();
+				}
+			}
+			}
+
+			property PixelManaged^ Tint
+			{
+			public: PixelManaged^ get() { return tint; }
+			public: void set(PixelManaged^ value)
+			{
+				tint = value;
+				nativeImpl->tint = *value->GetImplementation();
+			}
 			}
 
 		};
@@ -575,13 +665,7 @@ namespace olc {
 
 		public:
 			PixelGameEngineManaged() { nativeImpl = new olcPixelGameEngineWithOwner(this); }
-			~PixelGameEngineManaged() { this->!PixelGameEngineManaged(); }
-			!PixelGameEngineManaged() {
-				if (nativeImpl) {
-					delete nativeImpl;
-					nativeImpl = 0;
-				}
-			}
+
 		public:
 			// Called once on application startup, use to load your resources
 			virtual bool OnUserCreate() = 0;
@@ -604,9 +688,9 @@ namespace olc {
 			// Get Mouse Wheel Delta
 			int32_t GetMouseWheel();
 			//// Get the mouse in window space
-			vi2dm^ GetWindowMouse();
+			vi2dcm^ GetWindowMouse();
 			//// Gets the mouse as a vector to keep Tarriest happy
-			vi2dm^ GetMousePos();
+			vi2dcm^ GetMousePos();
 
 		public: // Core stuff
 			rcodeManaged Construct(int32_t screen_w, int32_t screen_h, int32_t pixel_w, int32_t pixel_h, bool full_screen, bool vsync, bool cohesion);
@@ -637,11 +721,11 @@ namespace olc {
 			// Gets last update of elapsed time
 			float GetElapsedTime();
 			// Gets Actual Window size
-			vi2dm^ GetWindowSize();
+			vi2dcm^ GetWindowSize();
 			// Gets pixel scale
-			vi2dm^ GetPixelSize();
+			vi2dcm^ GetPixelSize();
 			// Gets actual pixel scale
-			vi2dm^ GetScreenPixelSize();
+			vi2dcm^ GetScreenPixelSize();
 
 		public: // CONFIGURATION ROUTINES
 			// Layer targeting functions
@@ -864,19 +948,19 @@ namespace olc {
 		// -------- Resource Pack --------
 		bool ResourcePackManaged::AddFile(System::String^ sFile)
 		{
-			return m_Impl->AddFile(Util::MarshalString(sFile));
+			return nativeImpl->AddFile(Util::MarshalString(sFile));
 		}
 		bool ResourcePackManaged::LoadPack(System::String^ sFile, System::String^ sKey)
 		{
-			return m_Impl->LoadPack(Util::MarshalString(sFile), Util::MarshalString(sKey));
+			return nativeImpl->LoadPack(Util::MarshalString(sFile), Util::MarshalString(sKey));
 		}
 		bool ResourcePackManaged::SavePack(System::String^ sFile, System::String^ sKey)
 		{
-			return m_Impl->SavePack(Util::MarshalString(sFile), Util::MarshalString(sKey));
+			return nativeImpl->SavePack(Util::MarshalString(sFile), Util::MarshalString(sKey));
 		}
 		List<char>^ ResourcePackManaged::GetFileBuffer(System::String^ sFile)
 		{
-			std::vector<char> buffer = m_Impl->GetFileBuffer(Util::MarshalString(sFile)).vMemory;
+			std::vector<char> buffer = nativeImpl->GetFileBuffer(Util::MarshalString(sFile)).vMemory;
 			// Copy the contect of the vector into a list. There may be a faster way to pass the contect to the managed side...
 			const int SIZE = buffer.size();
 			List<char>^ tempArr = gcnew List<char>(SIZE);
@@ -888,96 +972,87 @@ namespace olc {
 		}
 		bool ResourcePackManaged::Loaded()
 		{
-			return m_Impl->Loaded();
+			return nativeImpl->Loaded();
 		}
 
 		// -------- Sprite ----------
 
 		rcodeManaged SpriteManaged::LoadFromFile(System::String^ sImageFile, ResourcePackManaged^ pack)
 		{
-			return (rcodeManaged)m_Impl->LoadFromFile(Util::MarshalString(sImageFile), pack->GetImplementation());
+			return (rcodeManaged)nativeImpl->LoadFromFile(Util::MarshalString(sImageFile), pack->GetImplementation());
 		}
 		rcodeManaged SpriteManaged::LoadFromFile(System::String^ sImageFile) {
-			return (rcodeManaged)m_Impl->LoadFromFile(Util::MarshalString(sImageFile));
+			return (rcodeManaged)nativeImpl->LoadFromFile(Util::MarshalString(sImageFile));
 		}
 		rcodeManaged SpriteManaged::LoadFromPGESprFile(System::String^ sImageFile, ResourcePackManaged^ pack) {
-			return (rcodeManaged)m_Impl->LoadFromPGESprFile(Util::MarshalString(sImageFile), pack->GetImplementation());
+			return (rcodeManaged)nativeImpl->LoadFromPGESprFile(Util::MarshalString(sImageFile), pack->GetImplementation());
 		}
 		rcodeManaged SpriteManaged::LoadFromPGESprFile(System::String^ sImageFile) {
-			return (rcodeManaged)m_Impl->LoadFromPGESprFile(Util::MarshalString(sImageFile));
+			return (rcodeManaged)nativeImpl->LoadFromPGESprFile(Util::MarshalString(sImageFile));
 		}
 		rcodeManaged SpriteManaged::SaveToPGESprFile(System::String^ sImageFile) {
-			return (rcodeManaged)m_Impl->SaveToPGESprFile(Util::MarshalString(sImageFile));
+			return (rcodeManaged)nativeImpl->SaveToPGESprFile(Util::MarshalString(sImageFile));
 		}
 
-
-		int32_t SpriteManaged::width()
-		{
-			return m_Impl->width;
-		}
-		int32_t SpriteManaged::height()
-		{
-			return m_Impl->height;
-		}
 
 		void SpriteManaged::SetSampleMode()
 		{
-			m_Impl->SetSampleMode();
+			nativeImpl->SetSampleMode();
 		}
 		void SpriteManaged::SetSampleMode(ModeManaged mode)
 		{
-			m_Impl->SetSampleMode((olc::Sprite::Mode)mode);
+			nativeImpl->SetSampleMode((olc::Sprite::Mode)mode);
 		}
 		PixelManaged^ SpriteManaged::GetPixel(int32_t x, int32_t y)
 		{
-			return gcnew PixelManaged(&m_Impl->GetPixel(x, y));
+			return gcnew PixelManaged(&nativeImpl->GetPixel(x, y));
 		}
 		bool  SpriteManaged::SetPixel(int32_t x, int32_t y, PixelManaged^ p)
 		{
-			return m_Impl->SetPixel(x, y, *p->GetImplementation());
+			return nativeImpl->SetPixel(x, y, *p->GetImplementation());
 		}
 		PixelManaged^ SpriteManaged::GetPixel(vi2dm^ a)
 		{
-			return  gcnew PixelManaged(&m_Impl->GetPixel(*a->GetImplementation()));
+			return  gcnew PixelManaged(&nativeImpl->GetPixel(*a->GetImplementation()));
 		}
 		bool  SpriteManaged::SetPixel(vi2dm^ a, PixelManaged^ p)
 		{
-			return m_Impl->SetPixel(*a->GetImplementation(), *p->GetImplementation());
+			return nativeImpl->SetPixel(*a->GetImplementation(), *p->GetImplementation());
 		}
 		PixelManaged^ SpriteManaged::Sample(float x, float y)
 		{
-			return  gcnew PixelManaged(&m_Impl->Sample(x, y));
+			return  gcnew PixelManaged(&nativeImpl->Sample(x, y));
 		}
 		PixelManaged^ SpriteManaged::SampleBL(float u, float v)
 		{
-			return  gcnew PixelManaged(&m_Impl->SampleBL(u, v));
+			return  gcnew PixelManaged(&nativeImpl->SampleBL(u, v));
 		}
 		PixelManaged^ SpriteManaged::GetData()
 		{
-			return  gcnew PixelManaged(m_Impl->GetData());
+			return  gcnew PixelManaged(nativeImpl->GetData());
 		}
 		SpriteManaged^ SpriteManaged::Duplicate()
 		{
-			return  gcnew SpriteManaged(m_Impl->Duplicate());
+			return  gcnew SpriteManaged(nativeImpl->Duplicate());
 		}
 		SpriteManaged^ SpriteManaged::Duplicate(vi2dm^ vPos, vi2dm^ vSize)
 		{
-			return  gcnew SpriteManaged(m_Impl->Duplicate(*vPos->GetImplementation(), *vSize->GetImplementation()));
+			return  gcnew SpriteManaged(nativeImpl->Duplicate(*vPos->GetImplementation(), *vSize->GetImplementation()));
 		}
 
 		PixelManaged^ SpriteManaged::pColData()
 		{
-			return  gcnew PixelManaged(m_Impl->pColData);
+			return  gcnew PixelManaged(nativeImpl->pColData);
 		}
 		SpriteManaged::ModeManaged^ SpriteManaged::modeSample()
 		{
-			return (SpriteManaged::ModeManaged)m_Impl->modeSample;
+			return (SpriteManaged::ModeManaged)nativeImpl->modeSample;
 		}
 
 		// -------- Decals ----------
 		void DecalManaged::Update()
 		{
-			m_Impl->Update();
+			nativeImpl->Update();
 		}
 
 
@@ -1014,14 +1089,14 @@ namespace olc {
 			return nativeImpl->GetMouseWheel();
 		}
 		//// Get the mouse in window space
-		vi2dm^ PixelGameEngineManaged::GetWindowMouse()
+		vi2dcm^ PixelGameEngineManaged::GetWindowMouse()
 		{
-			return gcnew vi2dm(&nativeImpl->GetWindowMouse());
+			return gcnew vi2dcm(&nativeImpl->GetWindowMouse());
 		}
 		//// Gets the mouse as a vector to keep Tarriest happy
-		vi2dm^ PixelGameEngineManaged::GetMousePos()
+		vi2dcm^ PixelGameEngineManaged::GetMousePos()
 		{
-			return gcnew vi2dm(&nativeImpl->GetMousePos());
+			return gcnew vi2dcm(&nativeImpl->GetMousePos());
 		}
 		// Core methods
 
@@ -1100,19 +1175,19 @@ namespace olc {
 			return nativeImpl->GetElapsedTime();
 		}
 		// Gets Actual Window size
-		vi2dm^ PixelGameEngineManaged::GetWindowSize()
+		vi2dcm^ PixelGameEngineManaged::GetWindowSize()
 		{
-			return gcnew vi2dm(&nativeImpl->GetWindowSize());
+			return gcnew vi2dcm(&nativeImpl->GetWindowSize());
 		}
 		// Gets pixel scale
-		vi2dm^ PixelGameEngineManaged::GetPixelSize()
+		vi2dcm^ PixelGameEngineManaged::GetPixelSize()
 		{
-			return gcnew vi2dm(&nativeImpl->GetPixelSize());
+			return gcnew vi2dcm(&nativeImpl->GetPixelSize());
 		}
 		// Gets actual pixel scale
-		vi2dm^ PixelGameEngineManaged::GetScreenPixelSize()
+		vi2dcm^ PixelGameEngineManaged::GetScreenPixelSize()
 		{
-			return gcnew vi2dm(&nativeImpl->GetScreenPixelSize());
+			return gcnew vi2dcm(&nativeImpl->GetScreenPixelSize());
 		}
 
 		// CONFIGURATION ROUTINES
@@ -1154,10 +1229,10 @@ namespace olc {
 		{
 			// TODO: Make this generic util
 			auto native = nativeImpl->GetLayers();
-			auto result = gcnew List<LayerDescManaged^>(sizeof(native));
+			auto result = gcnew List<LayerDescManaged^>(native.size());
 			for (int i = 0; i < result->Capacity; ++i)
 			{
-				result[i] = gcnew LayerDescManaged(&native[i]);
+				result->Add(gcnew LayerDescManaged(&native.at(i)));
 			}
 			return result;
 		}
@@ -1398,15 +1473,25 @@ namespace olc {
 		}
 		void PixelGameEngineManaged::DrawWarpedDecal(DecalManaged^ decal, List<vf2dm^>^ pos, PixelManaged^ tint)
 		{
-			// Language doesn't let me set this in a loop, no idea why....
-			const std::array<vf2d, 4> posNative = { *pos[0]->GetImplementation(), *pos[1]->GetImplementation(),*pos[2]->GetImplementation(),*pos[3]->GetImplementation() };
-			nativeImpl->DrawWarpedDecal(decal->GetImplementation(), posNative, *tint->GetImplementation());
+			auto posNative = new std::array<vf2d, 4>();
+
+			for (int i = 0; i < 4; ++i)
+			{
+				(*posNative).at(i) = *pos[0]->GetImplementation();
+			}
+
+			nativeImpl->DrawWarpedDecal(decal->GetImplementation(), *posNative, *tint->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawWarpedDecal(DecalManaged^ decal, List<vf2dm^>^ pos)
 		{
-			// Language doesn't let me set this in a loop, no idea why....
-			const std::array<vf2d, 4> posNative = { *pos[0]->GetImplementation(), *pos[1]->GetImplementation(),*pos[2]->GetImplementation(),*pos[3]->GetImplementation() };
-			nativeImpl->DrawWarpedDecal(decal->GetImplementation(), posNative);
+			auto posNative = new std::array<vf2d, 4>();
+
+			for (int i = 0; i < 4; ++i)
+			{
+				(*posNative).at(i) = *pos[0]->GetImplementation();
+			}
+
+			nativeImpl->DrawWarpedDecal(decal->GetImplementation(), *posNative);
 		}
 		// As above, but you can specify a region of a decal source sprite
 		void PixelGameEngineManaged::DrawPartialWarpedDecal(DecalManaged^ decal, vf2dm^ pos, vf2dm^ source_pos, vf2dm^ source_size, PixelManaged^ tint)
@@ -1419,15 +1504,23 @@ namespace olc {
 		}
 		void PixelGameEngineManaged::DrawPartialWarpedDecal(DecalManaged^ decal, List<vf2dm^>^ pos, vf2dm^ source_pos, vf2dm^ source_size, PixelManaged^ tint)
 		{
-			// Language doesn't let me set this in a loop, no idea why....
-			const std::array<vf2d, 4> posNative = { *pos[0]->GetImplementation(), *pos[1]->GetImplementation(),*pos[2]->GetImplementation(),*pos[3]->GetImplementation() };
-			nativeImpl->DrawPartialWarpedDecal(decal->GetImplementation(), posNative, *source_pos->GetImplementation(), *source_size->GetImplementation(), *tint->GetImplementation());
+			auto posNative = new std::array<vf2d, 4>();
+
+			for (int i = 0; i < 4; ++i)
+			{
+				(*posNative).at(i) = *pos[0]->GetImplementation();
+			}
+			nativeImpl->DrawPartialWarpedDecal(decal->GetImplementation(), *posNative, *source_pos->GetImplementation(), *source_size->GetImplementation(), *tint->GetImplementation());
 		}
 		void PixelGameEngineManaged::DrawPartialWarpedDecal(DecalManaged^ decal, List<vf2dm^>^ pos, vf2dm^ source_pos, vf2dm^ source_size)
 		{
-			// Language doesn't let me set this in a loop, no idea why....
-			const std::array<vf2d, 4> posNative = { *pos[0]->GetImplementation(), *pos[1]->GetImplementation(),*pos[2]->GetImplementation(),*pos[3]->GetImplementation() };
-			nativeImpl->DrawPartialWarpedDecal(decal->GetImplementation(), posNative, *source_pos->GetImplementation(), *source_size->GetImplementation());
+			auto posNative = new std::array<vf2d, 4>();
+
+			for (int i = 0; i < 4; ++i)
+			{
+				(*posNative).at(i) = *pos[0]->GetImplementation();
+			}
+			nativeImpl->DrawPartialWarpedDecal(decal->GetImplementation(), *posNative, *source_pos->GetImplementation(), *source_size->GetImplementation());
 		}
 		// Draws a decal rotated to specified angle, wit point of rotation offset
 		void PixelGameEngineManaged::DrawRotatedDecal(vf2dm^ pos, DecalManaged^ decal, float fAngle, vf2dm^ center, vf2dm^ scale, PixelManaged^ tint)
@@ -1497,17 +1590,5 @@ namespace olc {
 		{
 			nativeImpl->GradientFillRectDecal(*pos->GetImplementation(), *size->GetImplementation(), *colTL->GetImplementation(), *colBL->GetImplementation(), *colBR->GetImplementation(), *colTR->GetImplementation());
 		}
-
-
-
-		// Dummy function for CLI quirks...
-		inline void Dummy_ExportTemplated()
-		{
-			auto vec1 = gcnew olc::managed::v2d_genericManaged<int32_t>();
-			auto vec2 = gcnew olc::managed::v2d_genericManaged<uint32_t>();
-			auto vec3 = gcnew olc::managed::v2d_genericManaged<float>();
-			auto vec4 = gcnew olc::managed::v2d_genericManaged<double>();
-		}
-
 	}
 }

@@ -2,6 +2,7 @@
 #define OLC_PGE_APPLICATION
 #include "PixelGameEngineManaged.h"
 #include "olcPGEXSoundManaged.h"
+#include "PGEXUtilitiesManaged.h"
 
 public ref class ExampleManaged : public olc::managed::PixelGameEngineManaged
 {
